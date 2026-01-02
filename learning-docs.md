@@ -6,3 +6,8 @@
 
 - Connected SQL database in order to finish & test the login form
 Tutorial Used: https://www.youtube.com/watch?v=mcR1vDPMKP4
+
+Simple queries: 
+SELECT * from DATABASE NAME;
+
+(optional: WHERE user_id = 2;)
