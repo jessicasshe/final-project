@@ -11,3 +11,10 @@ Simple queries:
 SELECT * from DATABASE NAME;
 
 (optional: WHERE user_id = 2;)
+
+Important packages for queries:
+https://www.w3schools.com/sql/sql_syntax.asp
+https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
+Statement: Object used to tell the database what to do (Select, Update, Insert, Delete)
+ResultSet: A table you get back with selected after the statement's SELECT query which you can loop through
+-> Flow: Statement -> ResultSet -> Loop through ResultSet to manipulate / view the data 
