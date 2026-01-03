@@ -18,3 +18,7 @@ https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
 Statement: Object used to tell the database what to do (Select, Update, Insert, Delete)
 ResultSet: A table you get back with selected after the statement's SELECT query which you can loop through
 -> Flow: Statement -> ResultSet -> Loop through ResultSet to manipulate / view the data 
+
+- Learned how to debug properly on Netbeans (not available on CodeHS)
+Set breakpoints by clicking on the code line number
+Hover over variable names to show their live value 
