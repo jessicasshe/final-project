@@ -1,4 +1,4 @@
 ## Problem with finding the table of connected DB
-Error -> Java probably created a new empty DB with the same name in the DIRECT path (loginandsignup project) since the one created in SQLite studio wasn't, but was just in the general 'NetBeansProjects' folder.
+Error -> Java created a new empty DB with the same name in what it considered the working path (?) since the one created in SQLite studio was linked to a general 'NetBeansProjects' folder
 
-Solution -> Moved the correct DB into the direct path for it to be recognized
+Solution -> Explicitly set the working path of the project to the one linked in SQLite studio
