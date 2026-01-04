@@ -3,6 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package loginandsignup;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
 
 public class Login extends javax.swing.JFrame {
     
@@ -13,6 +16,11 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        System.out.println(System.getProperty("user.dir"));
+        DatabaseConnector user_db_connector = new DatabaseConnector("LoginAndSignUp.db");
+        user_db = user_db_connector.connect();
+        db_operator = new UserDBOperator(user_db);  
+
     }
 
     /**
@@ -43,7 +51,7 @@ public class Login extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(800, 500));
         jPanel1.setLayout(null);
 
-        Right.setBackground(new java.awt.Color(61, 58, 75));
+        Right.setBackground(new java.awt.Color(89, 69, 69));
         Right.setPreferredSize(new java.awt.Dimension(400, 500));
 
         javax.swing.GroupLayout RightLayout = new javax.swing.GroupLayout(Right);
@@ -60,31 +68,35 @@ public class Login extends javax.swing.JFrame {
         jPanel1.add(Right);
         Right.setBounds(-10, -10, 410, 510);
 
-        Left.setBackground(new java.awt.Color(255, 255, 255));
+        Left.setBackground(new java.awt.Color(255, 248, 234));
         Left.setForeground(new java.awt.Color(61, 58, 75));
         Left.setPreferredSize(new java.awt.Dimension(400, 500));
 
         jLabel1.setFont(new java.awt.Font("Palatino", 1, 36)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(61, 58, 75));
+        jLabel1.setForeground(new java.awt.Color(89, 69, 69));
         jLabel1.setText("LOGIN");
 
+        jLabel2.setForeground(new java.awt.Color(89, 69, 69));
         jLabel2.setText("Email");
 
+        jLabel3.setForeground(new java.awt.Color(89, 69, 69));
         jLabel3.setText("Password");
 
         email_text.addActionListener(this::email_textActionPerformed);
 
-        password_text.setText("jPasswordField1");
+        password_text.addActionListener(this::password_textActionPerformed);
 
-        login_btn.setBackground(new java.awt.Color(61, 58, 75));
+        login_btn.setBackground(new java.awt.Color(89, 69, 69));
         login_btn.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         login_btn.setForeground(new java.awt.Color(255, 255, 255));
         login_btn.setText("Login");
+        login_btn.setAutoscrolls(true);
         login_btn.addActionListener(this::login_btnActionPerformed);
 
+        jLabel4.setForeground(new java.awt.Color(89, 69, 69));
         jLabel4.setText("I don't have an account");
 
-        signup_btn.setBackground(new java.awt.Color(61, 58, 75));
+        signup_btn.setBackground(new java.awt.Color(89, 69, 69));
         signup_btn.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         signup_btn.setForeground(new java.awt.Color(255, 255, 255));
         signup_btn.setText("Sign Up");
@@ -106,11 +118,11 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(jLabel3)
                         .addComponent(jLabel2)
                         .addComponent(password_text))
-                    .addComponent(login_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(LeftLayout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(29, 29, 29)
-                        .addComponent(signup_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(signup_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(login_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(38, Short.MAX_VALUE))
         );
         LeftLayout.setVerticalGroup(
@@ -126,13 +138,13 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
                 .addComponent(password_text, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43)
+                .addGap(37, 37, 37)
                 .addComponent(login_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(signup_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(61, Short.MAX_VALUE))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
 
         jPanel1.add(Left);
@@ -161,17 +173,44 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void email_textActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_email_textActionPerformed
-        // TODO add your handling code here:
-        // verify if user already exists in the file of saved login infos 
+        // TODO add your handling code here:        
     }//GEN-LAST:event_email_textActionPerformed
 
     private void login_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login_btnActionPerformed
-        // TODO add your handling code here:
+        
+        // validate 
+         if(email_text.getText().isEmpty() || password_text.getText().isEmpty())
+            {
+                System.out.println("Cannot leave the fields empty, please try again.");
+            }
+         else // go to db 
+            {
+                db_operator.setEmail(email_text.getText().trim());
+                db_operator.setPassword(password_text.getText().trim());
+                
+                int user_id = db_operator.FindExistingUser();
+                if(user_id != 0 && user_id != -1)
+                    System.out.println("Login successful!");
+                    // go to home screen & create the user object 
+                else
+                    System.out.println("Wrong credentials, please try again!");
+            }
     }//GEN-LAST:event_login_btnActionPerformed
 
     private void signup_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signup_btnActionPerformed
         // TODO add your handling code here:
+        Signup SignupFrame = new Signup(this, db_operator); // create a login frame object (panels defined in login class)
+        SignupFrame.setVisible(true);
+        SignupFrame.pack();
+        SignupFrame.setLocationRelativeTo(null);
+        this.setVisible(false); // hides current window 
+
+        
     }//GEN-LAST:event_signup_btnActionPerformed
+
+    private void password_textActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_password_textActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_password_textActionPerformed
 
     /**
      * @param args the command line arguments
@@ -192,4 +231,6 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPasswordField password_text;
     private javax.swing.JButton signup_btn;
     // End of variables declaration//GEN-END:variables
+    private Connection user_db;
+    private UserDBOperator db_operator;
 }

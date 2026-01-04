@@ -3,6 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package loginandsignup;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.DriverManager;
 
 /**
  *
@@ -15,7 +18,9 @@ public class LoginAndSignUp {
         Login LoginFrame = new Login(); // create a login frame object (panels defined in login class)
         LoginFrame.setVisible(true);
         LoginFrame.pack();
-        LoginFrame.setLocationRelativeTo(null); // center 
+        LoginFrame.setLocationRelativeTo(null);
+        // center 
+        
     }
     
 }
