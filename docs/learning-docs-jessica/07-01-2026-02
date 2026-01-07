@@ -1,0 +1,3 @@
+- Uploading image files in Java Swing
+-> Select JFileChooser 
+-> Upload using BufferedImage OR ImageIcon
