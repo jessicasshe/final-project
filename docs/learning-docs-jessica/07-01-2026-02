@@ -1,3 +1,10 @@
 - Uploading image files in Java Swing
 -> Select JFileChooser 
 -> Upload using BufferedImage OR ImageIcon
+
+- Adding image files to BLOB column type
+https://www.sqlitetutorial.net/sqlite-java/jdbc-read-write-blob/
+
+- Changing icon on the JLabel 
+-> setIcon(ImageIcon object)
+-> setIcon(null) first to show change?
