@@ -12,8 +12,29 @@ public class UserDBOperator {
     String full_name; 
     Statement stmt;
     ResultSet rs;
+    String title;
+    String author;
+    String num_pages;
     
     // don't pass in the values from login because its not guaranteed stuff will be entered; use SETTERS instead 
+    
+    public String setTitle(String title)
+    {
+        this.title = title;
+        return this.title;
+    }
+    
+    public String setAuthor(String author)
+    {
+        this.author = author;
+        return this.author;
+    }
+    
+    public String setNumPages(String num_pages)
+    {
+        this.num_pages = num_pages;
+        return this.num_pages;
+    }
     
     public String setEmail(String email)
     {
@@ -116,6 +137,21 @@ public class UserDBOperator {
             System.out.println("Something went wrong while trying to close");
         }
         return 0;
+    }
+    
+    public int createBook()
+    {
+        try{
+            stmt = user_database.createStatement();
+            stmt.executeUpdate("INSERT into Books (book_name, author, num_pages) VALUES('"+title+"', '"+author+"', '"+num_pages+"')");
+            return 1; // book added successfully 
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Something went wrong trying to insert books into the database");
+            e.printStackTrace();
+        }
+        return 0; // error showed up 
     }
     
 }
