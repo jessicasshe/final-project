@@ -1,0 +1,36 @@
+- Learned More SQL Table Joining 
+
+Sources used: 
+- Google Gemini
+- https://www.atlassian.com/data/sql/sql-join-types-explained-visually
+
+- IMPORTANT: Matches a PRIMARY and FOREIGN key. The FOREIGN key refers to the same primary key in a different table.
+
+--> Useful when you want to find Book details associated with a user in UserBooks. 
+
+Ex. Find the corresponding row where 'book_id' column value in Userbooks is equal to 'book_id' column value in Books
+-> Return only the row of the Books table!!
+
+- Types of JOINS
+
+1. INNER JOIN: Returns row ONLY when there is a match in BOTH tables (Now you can access all columns!)
+
+2. LEFT OUTER JOIN: Include rows from BOTH tables, matched to the LEFT table rows. If no match exists in RIGHT, null value provided
+
+3. RIGHT OUTER JOIN: Include rows from BOTH tables, matched to the RIGHT table rows. If no match exists in LEFT, null value provided 
+
+4. FULL OUTER JOIN: Return ALL rows where there is a match/no match. 
+
+5. UNION JOIN:  Stacks rows on top of the other
+
+6. CROSS JOIN: Combinations of table rows (1, 1), (1, 2), (1,3)...
+
+--> Writing a join statement:
+
+https://www.w3schools.com/sql/sql_join.asp
+
+SELECT *
+FROM ___ table_1
+INNER/LEFT/RIGHT JOIN ____ table_2
+ON table_1.Column_name = table_2.Column_name;
+
