@@ -3,6 +3,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
+import java.io.File;
+import java.sql.Blob;
 
 public class UserDBOperator {
     Connection user_database;
@@ -12,8 +14,38 @@ public class UserDBOperator {
     String full_name; 
     Statement stmt;
     ResultSet rs;
+    String title;
+    String author;
+    String num_pages;
+    File book_img_file;
     
     // don't pass in the values from login because its not guaranteed stuff will be entered; use SETTERS instead 
+    
+
+    public File setImageIcon(File img_file)
+    {
+        // change to BLOB file type 
+        book_img_file = img_file;
+        return book_img_file;
+    }
+            
+    public String setTitle(String title)
+    {
+        this.title = title;
+        return this.title;
+    }
+    
+    public String setAuthor(String author)
+    {
+        this.author = author;
+        return this.author;
+    }
+    
+    public String setNumPages(String num_pages)
+    {
+        this.num_pages = num_pages;
+        return this.num_pages;
+    }
     
     public String setEmail(String email)
     {
@@ -116,6 +148,23 @@ public class UserDBOperator {
             System.out.println("Something went wrong while trying to close");
         }
         return 0;
+    }
+    
+    public int createBook()
+    {
+        try{
+            stmt = user_database.createStatement();
+            
+            // call helper function to turn img file into BLOB
+            stmt.executeUpdate("INSERT into Books (book_name, author, num_pages, image) VALUES('"+title+"', '"+author+"', '"+num_pages+"', '"+book_img_file+"')");
+            return 1; // book added successfully 
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Something went wrong trying to insert books into the database");
+            e.printStackTrace();
+        }
+        return 0; // error showed up 
     }
     
 }

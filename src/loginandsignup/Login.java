@@ -190,7 +190,11 @@ public class Login extends javax.swing.JFrame {
                 
                 int user_id = db_operator.FindExistingUser();
                 if(user_id != 0 && user_id != -1)
+                {
                     System.out.println("Login successful!");
+                    BookDetails BookDetailsFrame = new BookDetails(db_operator);
+                    this.setVisible(false);
+                }
                     // go to home screen & create the user object 
                 else
                     System.out.println("Wrong credentials, please try again!");
