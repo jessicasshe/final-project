@@ -8,3 +8,10 @@ https://www.sqlitetutorial.net/sqlite-java/jdbc-read-write-blob/
 - Changing icon on the JLabel 
 -> setIcon(ImageIcon object)
 -> setIcon(null) first to show change?
+
+- Learned more about key Github concepts
+
+Local vs remote branches: Work in a local branch on each members computer, remote branch exists in the SHARED server/repo
+-> COMMIT: Save work with messages
+-> PUSH: Commits go from Local -> Remote
+-> PULL: Code pulled from remote to local 
