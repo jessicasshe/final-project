@@ -17,7 +17,7 @@ public class UserDBOperator {
     String title;
     String author;
     String num_pages;
-    Blob book_img_file;
+    File book_img_file;
     
     // don't pass in the values from login because its not guaranteed stuff will be entered; use SETTERS instead 
     
@@ -154,6 +154,8 @@ public class UserDBOperator {
     {
         try{
             stmt = user_database.createStatement();
+            
+            // call helper function to turn img file into BLOB
             stmt.executeUpdate("INSERT into Books (book_name, author, num_pages, image) VALUES('"+title+"', '"+author+"', '"+num_pages+"', '"+book_img_file+"')");
             return 1; // book added successfully 
         }
