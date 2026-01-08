@@ -8,6 +8,9 @@ Solution -> Select 'Enable destructive actions'
 
 ## Don't know how to create a byte stream to go from File -> BLOB
 Solution -> Need PREPARED STATEMENTS to handle BLOB data (mandatory)
+-> Convert file directly to byte using readAllBytes()
+-> Set the blob data as the byte file w/ the prepared statement
+
 
 ## Problems with a file that wouldn't clean and build
 Solution -> Check for test files, make sure they are named test and not anything else, check project files are in project tab and not file tab, move src file if needed - if this all fails copy code that you need and delete file as it is currupted. Re - clone file with Team - Git - Clone and link to repistory again
