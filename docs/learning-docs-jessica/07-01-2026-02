@@ -9,6 +9,22 @@ https://www.sqlitetutorial.net/sqlite-java/jdbc-read-write-blob/
 -> setIcon(ImageIcon object)
 -> setIcon(null) first to show change?
 
+- Insert BLOB data into SQLite database 
+  1. Prepare UPDATE statement
+  2. Get DB connection
+  3. Read file and return byte array
+ -> Implement a readFile function that returns a byte[]
+-> Create byte buffer as new byte object [] ?
+-> create a new ByteArrayOutputStream() object
+-> Call the .read(buffer) function on the file (reading file contents for conversion)
+-> Call the .write(byte [] object, 0, len) on the new bos object 
+-> Remember to use exceptionhandling
+-> Return using bos.toByteArray() 
+  5. executeUpdate() to execute the update statement OR insert statement
+  Picture gets added! 
+
+- How to update the picture ? 
+
 - Learned more about key Github concepts
 
 Local vs remote branches: Work in a local branch on each members computer, remote branch exists in the SHARED server/repo
