@@ -7,3 +7,6 @@ Solution -> Explicitly set the working path of the project to the one linked in 
 Solution -> Select 'Enable destructive actions'
 
 ## Don't know how to create a byte stream to go from File -> BLOB
+
+## Problems with a file that wouldn't clean and build
+Solution -> Check for test files, make sure they are named test and not anything else, check project files are in project tab and not file tab, move src file if needed - if this all fails copy code that you need and delete file as it is currupted. Re - clone file with Team - Git - Clone and link to repistory again
