@@ -23,7 +23,7 @@ public class BookCollection extends javax.swing.JFrame {
         initComponents();
         this.db_operator = db_operator;
         // create the JList using model from DB Operator
-        reading_list = new JList<>(db_operator.getBookNames());
+        reading_list = new JList<>(db_operator.getBookNames()); // use this to initialize defaultlistoperator 
 
     }
     
@@ -50,6 +50,7 @@ public class BookCollection extends javax.swing.JFrame {
         finished_list = new javax.swing.JList<>();
         finished_label = new javax.swing.JLabel();
         num_finished = new javax.swing.JLabel();
+        search_btn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(800, 500));
@@ -111,13 +112,13 @@ public class BookCollection extends javax.swing.JFrame {
                         .addComponent(num_to_read))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(25, 25, 25)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(104, 104, 104)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -126,10 +127,10 @@ public class BookCollection extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(28, 28, 28)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(13, 13, 13)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(43, 43, 43)
+                .addGap(47, 47, 47)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(to_read_label)
@@ -168,6 +169,11 @@ public class BookCollection extends javax.swing.JFrame {
         getContentPane().add(num_finished);
         num_finished.setBounds(650, 110, 20, 17);
 
+        search_btn.setText("Search Book");
+        search_btn.addActionListener(this::search_btnActionPerformed);
+        getContentPane().add(search_btn);
+        search_btn.setBounds(550, 20, 130, 50);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -178,14 +184,25 @@ public class BookCollection extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
-
+    
     private void reading_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reading_listMouseClicked
-        // TODO add your handling code here:
+        // book in curr_reading clicked 
+        
+        // show details (create SingleBookInfo object)
+        this.setVisible(false);
+        SingleBookInfo single_book_info = new SingleBookInfo(db_operator);
     }//GEN-LAST:event_reading_listMouseClicked
 
     private void to_read_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_to_read_listMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_to_read_listMouseClicked
+
+    private void search_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_btnActionPerformed
+        // query Books database for all existing titles 
+        db_operator.getBookNames();
+        // change the book_list using list model
+        
+    }//GEN-LAST:event_search_btnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -205,6 +222,7 @@ public class BookCollection extends javax.swing.JFrame {
     private javax.swing.JLabel num_reading;
     private javax.swing.JLabel num_to_read;
     private javax.swing.JList<String> reading_list;
+    private javax.swing.JButton search_btn;
     private javax.swing.JLabel to_read_label;
     private javax.swing.JList<String> to_read_list;
     // End of variables declaration//GEN-END:variables

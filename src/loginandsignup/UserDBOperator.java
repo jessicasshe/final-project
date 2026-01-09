@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 
 public class UserDBOperator {
+    // find a cleaner way to get access to column values w/o having all as attributes
     Connection user_database;
     int user_id;
     String email;
@@ -28,13 +29,80 @@ public class UserDBOperator {
     File book_img_file;
     byte[] blob_file;
     
+    // userbooks
+    String page_progress;
+    String shelf_type;
+    String book_id;
+    
 }
     
     
     // don't pass in the values from login because its not guaranteed stuff will be entered; use SETTERS instead 
     
+    public int setUserId(int user_id)
+    {
+        this.user_id = user_id;
+        return this.user_id;
+    }
+    
+    public int setPageProgress(int page_progress)
+    {
+        this.page_progress = page_progress;
+        return this.page_progress;
+    }
+    
+    public int setBookId(int book_id)
+    {
+        this.book_id = book_id;
+        return this._book_id;
+    }
+    
+    public int addBookToUserBooks()
+    {
+        try{
+            pstmt = db_operator.prepareStatement("INSERT into UserBooks (user_id, page_progress, shelf_type, book_id) VALUES(?, ?, ?, ?) WHERE ");
+            pstmt.setInt(1, user_id);
+            pstmt.setInt(2, page_progress);
+            pstmt.setString(3, shelf_type);
+            pstmt.setInt(4, book_id);
+            int id = pstmt.executeUpdate();
+            return id;
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Something went wrong while trying to add a book into user books");
+            e.printStackTrace();
+        }
+        return -1;
+    }
 
-    public DefaultListModel<String> getBookNames()
+    public DefaultListModel<String> getCurrentlyReading(String shelf_type)
+    {
+        DefaultListModel<String> curr_books = new DefaultListModel<>();
+        
+        // join Users with UserBooks first 
+        
+        try
+        {
+            pstmt = user_database.prepareStatement("SELECT book_name FROM Books JOIN UserBooks WHERE Books.book_id = UserBooks.book_id AND UserBooks.shelf_type = ?");
+            pstmt.setString(1, shelf_type);
+            rs.executeQuery();
+            // only get book_ids from the reading shelf 
+            while(rs.next())
+            {
+                curr_books.addElement(rs.getString("book_name");
+            }
+            return curr_books;
+        }
+        catch{SQLException e)
+        {
+            System.out.println("Something went wrong while trying to query for current books");
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public DefaultListModel<String> getBookNames() // used for SEARCH books available already
     {
         DefaultListModel<String> book_names = new DefaultListModel<>();        
         try{ 
@@ -44,7 +112,8 @@ public class UserDBOperator {
             {
                 System.out.println("Book being added is called: " + rs.getString("book_name"));
                 book_names.addElement(rs.getString("book_name"));           
-            }
+            }    public DefaultListModel<String> getBookNames() // used for SEARCH, temp for users curr reading list  
+
             return book_names;
         }
         
@@ -55,7 +124,14 @@ public class UserDBOperator {
         }
         return null;
     }
-            
+    
+    public ResultSet getFullBookDetails()
+    {
+        try{
+            pstmt = user_database.prepareStatement("SELECT * from Books INNER JOIN UserBooks WHERE Books.book_id = UserBooks.book_id ")
+        }
+    }
+        
     public File setImageIcon(File img_file)
     {
         // change to BLOB file type 

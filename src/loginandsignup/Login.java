@@ -189,6 +189,7 @@ public class Login extends javax.swing.JFrame {
                 db_operator.setPassword(password_text.getText().trim());
                 
                 int user_id = db_operator.FindExistingUser();
+                db_operator.setUserId(user_id);
                 if(user_id != 0 && user_id != -1)
                 {
                     System.out.println("Login successful!");
