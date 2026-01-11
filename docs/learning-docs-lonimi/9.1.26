@@ -1,6 +1,13 @@
-## Learning how to create a pop up window
+#**Learning how to create a pop up window**
 videos used: https://www.youtube.com/watch?v=qtFohSvMPak , https://www.youtube.com/watch?v=ffVY6HGtxH8&list=PLv1XiDDk9Y4carvS-wQUERCBXiR-kM9sw&index=2
 - create a button and design it how you like
 - add an action to the button
 - make sure to have imported JOption so you do not have any errors
-- you can make the
+
+**Making a streak**
+https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html   - api tutorial
+use this for keeping the date for the streak: https://docs.oracle.com/javase/tutorial/datetime/index.html?utm_
+timer class: https://youtu.be/LRzf2JChudM?si=865r3pVi4qvb_02B , https://www.youtube.com/watch?v=HR8rr73GrgY
+
+DATE CLASS: https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html?utm
+
