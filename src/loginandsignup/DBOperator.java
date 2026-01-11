@@ -14,7 +14,7 @@ import java.io.ByteArrayInputStream;
 import javax.swing.DefaultListModel;
 
 public class DBOperator {
-    // find a cleaner way to get access to column values w/o having all as attributes
+    // variables are given values using the setter methods 
     Connection user_database;
     int user_id;
     String email;
@@ -24,6 +24,7 @@ public class DBOperator {
     PreparedStatement pstmt;
     ResultSet rs;
     
+    // Group all of these into one resultset 
     String title;
     String author;
     String num_pages;
@@ -35,8 +36,12 @@ public class DBOperator {
     String shelf_type;
     int book_id;
     
-    
-    // don't pass in the values from login because its not guaranteed stuff will be entered; use SETTERS instead 
+     
+    public String setShelfType(String shelf_name)
+    {
+        shelf_type = shelf_name;
+        return shelf_type;
+    }
     
     public int setUserId(int user_id)
     {
@@ -62,18 +67,52 @@ public class DBOperator {
         return num_users_read;
     }
     
-    public int addBookToUserBooks()
+    /* 
+    Called from the SingleBookInfo window. Updates the column values specifically in Books for a selected book.
+    @param: none, used setter methods to edit column values 
+    @return: updated book_id for the book
+    */
+    public int updateBooksColumns()
+    {
+        try{
+        pstmt = user_database.prepareStatement("UPDATE Books SET book_author = ?, book_name = ? , total_users_read = ?, image = ? , num_pages = ? WHERE book_id = ? ");
+        return pstmt.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Something went wrong when trying to update book information in Books");
+            e.printStackTrace();
+        }
+        return -1;
+    }
+            
+    public int updateUsersBooksColumns()
+    {
+        try
+        {
+            pstmt = user_database.prepareStatement("UPDATE UsersBooks SET page_progress = ?, shelf_type = ? WHERE book_id = ?");
+            return pstmt.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Something went wrong when updating book info in UsersBooks");
+            e.printStackTrace();
+        }
+        return -1;
+    }
+    
+    public int addBookToUserBooks(ResultSet details) // already given the row itself so it isnt necessary to set the attribute variables
     {
         
         try{
             
             // check for duplication
-            pstmt = user_database.prepareStatement("SELECT * from UsersBooks where user_id = ? AND page_progress = ? AND shelf_type = ? AND book_id = ? AND total_users_read = ?");
-            pstmt.setInt(1, user_id);
-            pstmt.setInt(2, page_progress);
-            pstmt.setString(3, shelf_type);
-            pstmt.setInt(4, book_id);
-            pstmt.setInt(5, num_users_read);
+            pstmt = user_database.prepareStatement("SELECT * from UsersBooks INNER JOIN Books where Users.user_id = Books.book_id AND where user_id = ? AND page_progress = ? AND shelf_type = ? AND book_id = ? AND total_users_read = ?");
+            pstmt.setInt(1, details.getInt("user_id"));
+            pstmt.setInt(2, details.getInt("page_progress"));
+            pstmt.setString(3, details.getString("shelf_type"));
+            pstmt.setInt(4, details.getInt("book_id"));
+            pstmt.setInt(5, details.getInt("num_users_read"));
             rs = pstmt.executeQuery();
             
             if(rs.next())
@@ -145,13 +184,28 @@ public class DBOperator {
         return null;
         }
     }
+    public int getBookId(String name)
+    {
+        try
+        {
+            pstmt = user_database.prepareStatement("SELECT book_id from Books WHERE book_name = '"+name+"'");
+            return pstmt.executeQuery().getInt("book_id");
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Something went wrong querying for the book_id");
+            e.printStackTrace();
+        }
+        return -1; //exception
+    }
     
-    public ResultSet getFullBookDetails(String book_name) // for individual book window
+    
+    public ResultSet getFullBookDetails(int book_id) // for individual book window
     {
         try
         {
             // left join (Books table) bc some books might not belong to the user yet
-            pstmt = user_database.prepareStatement("SELECT * from Books LEFT JOIN UsersBooks WHERE Books.book_id = UsersBooks.book_id AND book_name = '"+book_name+"'");
+            pstmt = user_database.prepareStatement("SELECT * from Books LEFT JOIN UsersBooks WHERE Books.book_id = UsersBooks.book_id AND book_name = '"+title+"'");
             return pstmt.executeQuery(); // returns all book info personal to user & to general book
         }
         

@@ -11,10 +11,15 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
-    public Login() {
+    public Login(WindowManager manager) {
         initComponents();
         System.out.println(System.getProperty("user.dir"));
         DatabaseConnector user_db_connector = new DatabaseConnector("LoginAndSignUp.db");
+        this.setVisible(true);
+        this.pack();
+        this.setLocationRelativeTo(null);
+
+        window_manager = manager;
         user_db = user_db_connector.connect();
         db_operator = new DBOperator(user_db);  
     }
@@ -190,7 +195,7 @@ public class Login extends javax.swing.JFrame {
                     System.out.println("Login successful!");
                     
                     // go to the home page (pull from main)
-                    BookCollection book_collection_window = new BookCollection(db_operator);
+                    window_manager.setBookCollectionWindow(new BookCollection(db_operator, window_manager));
                     this.setVisible(false);
                 }
                 else
@@ -200,10 +205,8 @@ public class Login extends javax.swing.JFrame {
 
     private void signup_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signup_btnActionPerformed
         // TODO add your handling code here:
-        Signup SignupFrame = new Signup(this, db_operator); // create a login frame object (panels defined in login class)
-        SignupFrame.setVisible(true);
-        SignupFrame.pack();
-        SignupFrame.setLocationRelativeTo(null);
+        Signup SignupFrame = new Signup(db_operator, window_manager); 
+        window_manager.setSignupWindow(SignupFrame);
         this.setVisible(false); // hides current window 
     }//GEN-LAST:event_signup_btnActionPerformed
 
@@ -232,4 +235,5 @@ public class Login extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
     private Connection user_db;
     private DBOperator db_operator;
+    private WindowManager window_manager;
 }

@@ -17,10 +17,14 @@ public class BookCollection extends javax.swing.JFrame {
     /**
      * Creates new form BookCollection
      */
-    public BookCollection(DBOperator db_operator)
+    public BookCollection(DBOperator db_operator, WindowManager manager)
     {
         this.setVisible(true);
+        this.pack();
+        this.setLocationRelativeTo(null);
+
         initComponents();
+        this.manager = manager;
         this.db_operator = db_operator;
         
         // initialize list models
@@ -188,12 +192,12 @@ public class BookCollection extends javax.swing.JFrame {
     }//GEN-LAST:event_finished_listMouseClicked
     
     private void search_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_btnActionPerformed
-        SearchBook search_window = new SearchBook(db_operator);
+        manager.setSearchBookWindow(new SearchBook(db_operator, manager));
         this.setVisible(false);
     }//GEN-LAST:event_search_btnActionPerformed
 
     private void create_book_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_create_book_btnActionPerformed
-        CreateBook create_book_window = new CreateBook(db_operator);
+        manager.setCreateBookWindow(new CreateBook(db_operator, manager));
         this.setVisible(false);
     }//GEN-LAST:event_create_book_btnActionPerformed
 
@@ -202,8 +206,9 @@ public class BookCollection extends javax.swing.JFrame {
 
         // show details (create SingleBookInfo object)
         this.setVisible(false);
-            ResultSet details = db_operator.getFullBookDetails(reading_list.getSelectedValue());
-            SingleBookInfo single_book_info = new SingleBookInfo(db_operator, details); // might need unique constraint for name
+            int book_id = db_operator.getBookId(reading_list.getSelectedValue());
+            ResultSet details = db_operator.getFullBookDetails(book_id);
+            manager.setSingleBookWindow(new SingleBookInfo(db_operator, details, manager)); // might need unique constraint for name
 
     }//GEN-LAST:event_reading_listMouseClicked
 
@@ -234,4 +239,5 @@ public class BookCollection extends javax.swing.JFrame {
     private javax.swing.JList<String> to_read_list;
     // End of variables declaration//GEN-END:variables
     private DBOperator db_operator;
+    private WindowManager manager;
 }

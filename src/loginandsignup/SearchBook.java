@@ -15,8 +15,12 @@ public class SearchBook extends javax.swing.JFrame {
     /**
      * Creates new form AddBookWindow
      */
-    public SearchBook(DBOperator db_operator) {
+    public SearchBook(DBOperator db_operator, WindowManager manager) {
+        this.setVisible(true);
+        this.pack();
+        this.setLocationRelativeTo(null);
         this.db_operator = db_operator;
+        this.manager = manager;
         initComponents();
     }
 
@@ -117,4 +121,5 @@ public class SearchBook extends javax.swing.JFrame {
     private javax.swing.JButton title_search_btn;
     // End of variables declaration//GEN-END:variables
     private DBOperator db_operator;
+    private WindowManager manager;
 }

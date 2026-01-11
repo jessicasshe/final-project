@@ -61,27 +61,36 @@
               <Group type="102" attributes="0">
                   <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Component id="book_title" min="-2" pref="56" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
-                          <Component id="jLabel1" min="-2" pref="383" max="-2" attributes="0"/>
-                      </Group>
-                      <Component id="title_text" min="-2" pref="559" max="-2" attributes="0"/>
-                      <Component id="num_pages_text" alignment="0" min="-2" pref="559" max="-2" attributes="0"/>
-                      <Component id="num_of_pages" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
-                      <Component id="book_author" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
-                      <Component id="author_text" alignment="0" min="-2" pref="559" max="-2" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="book_image" min="-2" pref="111" max="-2" attributes="0"/>
-                              <Component id="upload_file_btn" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Component id="book_title" min="-2" pref="56" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
+                                  <Component id="jLabel1" min="-2" pref="383" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="title_text" min="-2" pref="559" max="-2" attributes="0"/>
+                              <Component id="num_pages_text" alignment="0" min="-2" pref="559" max="-2" attributes="0"/>
+                              <Component id="num_of_pages" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
+                              <Component id="book_author" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
+                              <Component id="author_text" alignment="0" min="-2" pref="559" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="book_image" min="-2" pref="111" max="-2" attributes="0"/>
+                                      <Component id="upload_file_btn" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="book_img" min="-2" pref="62" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="book_img" min="-2" pref="62" max="-2" attributes="0"/>
+                          <EmptySpace pref="135" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="create_btn" alignment="0" min="-2" pref="122" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="create_btn" min="-2" pref="122" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="back_btn" min="-2" pref="144" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="108" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
-                  <EmptySpace pref="135" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -106,13 +115,17 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
+                          <Component id="book_img" min="-2" pref="77" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
+                          <Component id="back_btn" min="-2" pref="38" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
                           <Component id="book_image" min="-2" pref="32" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="upload_file_btn" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                           <Component id="create_btn" min="-2" pref="43" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="book_img" min="-2" pref="77" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="19" max="32767" attributes="0"/>
               </Group>
@@ -185,6 +198,14 @@
               <Image iconType="3" name="/loginandsignup/_.jpeg"/>
             </Property>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="back_btn">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Back to Collection"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="back_btnActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
