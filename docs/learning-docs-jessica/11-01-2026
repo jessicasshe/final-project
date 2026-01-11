@@ -1,0 +1,7 @@
+Updating ResultSets
+-> For an individual table(no joined tables), you can call the updateRow() function 
+-> Unfortunately NOT work for joined tables, so in order to update the columns of Books and of UsersBooks, you have to do it separately
+
+Adding to Collection:
+Save changes button pressed --> Call helper method to update UsersBooks --> Call helper method to update Books --> Popup to select shelf type --> Call method to add to collection 
+
