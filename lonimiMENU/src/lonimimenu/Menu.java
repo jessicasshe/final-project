@@ -38,7 +38,6 @@ public class Menu extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(900, 600));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(89, 69, 69));
@@ -48,7 +47,7 @@ public class Menu extends javax.swing.JFrame {
         jButton1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
         jButton1.setForeground(new java.awt.Color(224, 118, 118));
         jButton1.setText("ANNOUNCEMENTS");
-        jButton1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(89, 69, 69), null));
+        jButton1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69)));
         jButton1.setPreferredSize(new java.awt.Dimension(220, 120));
         jButton1.addActionListener(this::jButton1ActionPerformed);
 
@@ -56,7 +55,7 @@ public class Menu extends javax.swing.JFrame {
         jButton2.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
         jButton2.setForeground(new java.awt.Color(224, 118, 118));
         jButton2.setText("NOTES");
-        jButton2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(89, 69, 69), null));
+        jButton2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69)));
         jButton2.setPreferredSize(new java.awt.Dimension(220, 120));
         jButton2.addActionListener(this::jButton2ActionPerformed);
 
@@ -64,7 +63,7 @@ public class Menu extends javax.swing.JFrame {
         jButton3.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
         jButton3.setForeground(new java.awt.Color(224, 118, 118));
         jButton3.setText("BOOK LIST");
-        jButton3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(89, 69, 69), null));
+        jButton3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69)));
         jButton3.setPreferredSize(new java.awt.Dimension(220, 120));
         jButton3.addActionListener(this::jButton3ActionPerformed);
 
@@ -132,7 +131,8 @@ public class Menu extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        //BOOK LIST
+        //BOOK LIST MENU
+        StreakTracker.promptIfNeeded(this);
         new BookListMenu().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
