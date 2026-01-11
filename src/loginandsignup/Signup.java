@@ -4,6 +4,7 @@
  */
 package loginandsignup;
 import java.sql.Connection;
+import loginandsignup.DBOperator;
 
 public class Signup extends javax.swing.JFrame {
     
@@ -12,7 +13,7 @@ public class Signup extends javax.swing.JFrame {
     /**
      * Creates new form Signup
      */
-    public Signup(Login login_frame, UserDBOperator db_operator) {
+    public Signup(Login login_frame, DBOperator db_operator) {
         initComponents();
         this.login_frame = login_frame;
         this.db_operator = db_operator; // change to operator object later 
@@ -230,5 +231,5 @@ public class Signup extends javax.swing.JFrame {
     private javax.swing.JButton signup_btn;
     // End of variables declaration//GEN-END:variables
     private Login login_frame;
-    private UserDBOperator db_operator;
+    private DBOperator db_operator;
 }

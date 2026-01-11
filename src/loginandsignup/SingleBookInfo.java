@@ -1,34 +1,23 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package loginandsignup;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import loginandsignup.DBOperator;
+import javax.swing.ImageIcon;
+import java.io.IOException;
+import javax.swing.SwingUtilities;
 
-/**
- *
- * @author JessicaS
- */
+
 public class SingleBookInfo extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(SingleBookInfo.class.getName());
 
-    /**
-     * Creates new form SingleBookInfo
-     */
-    public SingleBookInfo(UserDBOperator db_operator) {
+    public SingleBookInfo(DBOperator db_operator, ResultSet details) {
         this.db_operator = db_operator;
         initComponents();
-    }
-    
-    public initializeBookInfo()
-    {
+        this.details = details;
         
     }
     
-    
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -58,7 +47,6 @@ public class SingleBookInfo extends javax.swing.JFrame {
         add_book_btn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(800, 500));
         getContentPane().setLayout(null);
 
         jPanel1.setLayout(null);
@@ -71,7 +59,7 @@ public class SingleBookInfo extends javax.swing.JFrame {
         book_img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/loginandsignup/_.jpeg"))); // NOI18N
         book_img.setText("jLabel2");
         jPanel1.add(book_img);
-        book_img.setBounds(520, 110, 278, 320);
+        book_img.setBounds(510, 90, 278, 320);
 
         jLabel3.setText("Name");
         jPanel1.add(jLabel3);
@@ -102,7 +90,7 @@ public class SingleBookInfo extends javax.swing.JFrame {
         back_btn.setText("Back to Book Collection");
         back_btn.addActionListener(this::back_btnActionPerformed);
         jPanel1.add(back_btn);
-        back_btn.setBounds(40, 450, 189, 39);
+        back_btn.setBounds(40, 440, 189, 39);
 
         users_completed.setText("Insert # Users");
         jPanel1.add(users_completed);
@@ -115,7 +103,7 @@ public class SingleBookInfo extends javax.swing.JFrame {
 
         change_cover_btn.setText("Change Book Cover");
         jPanel1.add(change_cover_btn);
-        change_cover_btn.setBounds(520, 450, 160, 23);
+        change_cover_btn.setBounds(510, 420, 160, 23);
 
         edit_users_btn.setText("Edit");
         jPanel1.add(edit_users_btn);
@@ -137,7 +125,7 @@ public class SingleBookInfo extends javax.swing.JFrame {
         add_book_btn.setBounds(300, 340, 190, 60);
 
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(0, 0, 848, 498);
+        jPanel1.setBounds(0, 0, 800, 490);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -150,60 +138,62 @@ public class SingleBookInfo extends javax.swing.JFrame {
     }//GEN-LAST:event_back_btnActionPerformed
 
     private void open_reading_notes_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_open_reading_notes_btnActionPerformed
-        // TODO add your handling code here:
+        // open reading notes window & use overloaded method to give the specific book 
     }//GEN-LAST:event_open_reading_notes_btnActionPerformed
 
-    private ResultSet get_book_details() // JOIN BOOKS & USERBOOKS
+   private void setBookDetails() // JOIN BOOKS & USERBOOKS
     {
-        // db_operator queries for the resultset
+        // db_operator queries for the resultset to get all info at once
+        try{
+            
+        details = db_operator.getFullBookDetails(details.getString("book_name"));
         
-        // call helper function for editing other labels 
-    }
+        // INVOKE LATER
+        
+        // try catch have to be specific to the inside method
+        
+            // call helper function for editing other labels 
+            book_name.setText(details.getString("book_name"));
+            book_author.setText(details.getString("author"));
+            //book_img
+            book_img.setIcon(new ImageIcon(details.getBlob("book_img").getBinaryStream().readAllBytes()));
+      
+            // setup the progress bar
+            users_completed.setText(String.valueOf(details.getInt("total_users_read")));
+            progress_bar.setMinimum(0);
+            progress_bar.setMaximum(details.getInt("num_pages"));
+            progress_bar.setValue(details.getInt("page_progress"));
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Someething went wrong when trying to query for book details");
+            e.printStackTrace();
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        } 
+   }
             
     private void edit_name_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_name_btnActionPerformed
-        // TODO add your handling code here:
-        // call getBookName from db operator
+        // set book name with popup 
     }//GEN-LAST:event_edit_name_btnActionPerformed
 
     private void edit_author_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_author_btnActionPerformed
-        // TODO add your handling code here:
-        // call getAuthorName from db operator 
+        //
     }//GEN-LAST:event_edit_author_btnActionPerformed
 
     private void add_book_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_book_btnActionPerformed
         // TODO add your handling code here:
         // set values before func call
         db_operator.setPageProgress(progress_bar.getValue());
-        db_operator.setAuthor();
+       // db_operator.setAuthor();
     
         db_operator.addBookToUserBooks();
      
     }//GEN-LAST:event_add_book_btnActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new SingleBookInfo().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton add_book_btn;
@@ -225,5 +215,6 @@ public class SingleBookInfo extends javax.swing.JFrame {
     private javax.swing.JProgressBar progress_bar;
     private javax.swing.JLabel users_completed;
     // End of variables declaration//GEN-END:variables
-    private UserDBOperator db_operator;
+    private DBOperator db_operator;
+    private ResultSet details;
 }

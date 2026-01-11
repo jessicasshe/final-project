@@ -1,4 +1,6 @@
 package loginandsignup;
+
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -7,12 +9,11 @@ import java.sql.SQLException;
 import java.io.File;
 import java.sql.Blob;
 import java.io.IOException;
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.util.ArrayList;
+import java.io.ByteArrayInputStream;
 import javax.swing.DefaultListModel;
 
-public class UserDBOperator {
+public class DBOperator {
     // find a cleaner way to get access to column values w/o having all as attributes
     Connection user_database;
     int user_id;
@@ -26,15 +27,13 @@ public class UserDBOperator {
     String title;
     String author;
     String num_pages;
-    File book_img_file;
+    int num_users_read;
     byte[] blob_file;
     
     // userbooks
-    String page_progress;
+    int page_progress;
     String shelf_type;
-    String book_id;
-    
-}
+    int book_id;
     
     
     // don't pass in the values from login because its not guaranteed stuff will be entered; use SETTERS instead 
@@ -54,18 +53,39 @@ public class UserDBOperator {
     public int setBookId(int book_id)
     {
         this.book_id = book_id;
-        return this._book_id;
+        return this.book_id;
+    }
+    
+    public int setNumUsersRead(int num_users)
+    {
+        num_users_read = num_users;
+        return num_users_read;
     }
     
     public int addBookToUserBooks()
     {
+        
         try{
-            pstmt = db_operator.prepareStatement("INSERT into UserBooks (user_id, page_progress, shelf_type, book_id) VALUES(?, ?, ?, ?) WHERE ");
+            
+            // check for duplication
+            pstmt = user_database.prepareStatement("SELECT * from UsersBooks where user_id = ? AND page_progress = ? AND shelf_type = ? AND book_id = ? AND total_users_read = ?");
             pstmt.setInt(1, user_id);
             pstmt.setInt(2, page_progress);
             pstmt.setString(3, shelf_type);
             pstmt.setInt(4, book_id);
+            pstmt.setInt(5, num_users_read);
+            rs = pstmt.executeQuery();
+            
+            if(rs.next())
+            {
+                System.out.println("This book & its version already exists within the club");
+                return 0;
+            }
+
+            // insertion once valid
+            pstmt = user_database.prepareStatement("INSERT into UsersBooks (user_id, page_progress, shelf_type, book_id) VALUES(?, ?, ?, ?)");
             int id = pstmt.executeUpdate();
+            pstmt.close();
             return id;
         }
         catch(SQLException e)
@@ -76,7 +96,7 @@ public class UserDBOperator {
         return -1;
     }
 
-    public DefaultListModel<String> getCurrentlyReading(String shelf_type)
+    public DefaultListModel<String> getBookNames(String shelf_type) // overloaded method 
     {
         DefaultListModel<String> curr_books = new DefaultListModel<>();
         
@@ -84,19 +104,20 @@ public class UserDBOperator {
         
         try
         {
-            pstmt = user_database.prepareStatement("SELECT book_name FROM Books JOIN UserBooks WHERE Books.book_id = UserBooks.book_id AND UserBooks.shelf_type = ?");
+            pstmt = user_database.prepareStatement("SELECT book_name FROM Books JOIN UsersBooks WHERE Books.book_id = UsersBooks.book_id AND UsersBooks.shelf_type = ?");
             pstmt.setString(1, shelf_type);
-            rs.executeQuery();
+            rs = pstmt.executeQuery();
+
             // only get book_ids from the reading shelf 
             while(rs.next())
             {
-                curr_books.addElement(rs.getString("book_name");
+                curr_books.addElement(rs.getString("book_name"));
             }
             return curr_books;
         }
-        catch{SQLException e)
+        catch(SQLException e)
         {
-            System.out.println("Something went wrong while trying to query for current books");
+            System.out.println("Something went wrong while trying to query for books in " + shelf_type);
             e.printStackTrace();
         }
         return null;
@@ -105,41 +126,45 @@ public class UserDBOperator {
     public DefaultListModel<String> getBookNames() // used for SEARCH books available already
     {
         DefaultListModel<String> book_names = new DefaultListModel<>();        
-        try{ 
+        try
+        { 
             pstmt = user_database.prepareStatement("SELECT book_name FROM Books"); // change logic later for userbooks
             rs = pstmt.executeQuery();
             while(rs.next())
             {
                 System.out.println("Book being added is called: " + rs.getString("book_name"));
                 book_names.addElement(rs.getString("book_name"));           
-            }    public DefaultListModel<String> getBookNames() // used for SEARCH, temp for users curr reading list  
-
+            }     
             return book_names;
         }
-        
         catch(SQLException e)
         {
             System.out.println("Something went wrong when querying from the book database");
             e.printStackTrace();
+        
+        return null;
+        }
+    }
+    
+    public ResultSet getFullBookDetails(String book_name) // for individual book window
+    {
+        try
+        {
+            // left join (Books table) bc some books might not belong to the user yet
+            pstmt = user_database.prepareStatement("SELECT * from Books LEFT JOIN UsersBooks WHERE Books.book_id = UsersBooks.book_id AND book_name = '"+book_name+"'");
+            return pstmt.executeQuery(); // returns all book info personal to user & to general book
+        }
+        
+        catch(SQLException e)
+        {
+            System.out.println("Something went wrong while trying to get the full book details");
+            e.printStackTrace();
         }
         return null;
     }
+       
     
-    public ResultSet getFullBookDetails()
-    {
-        try{
-            pstmt = user_database.prepareStatement("SELECT * from Books INNER JOIN UserBooks WHERE Books.book_id = UserBooks.book_id ")
-        }
-    }
-        
-    public File setImageIcon(File img_file)
-    {
-        // change to BLOB file type 
-        book_img_file = img_file;
-        return book_img_file;
-    }
-    
-    public byte[] setBLOBImageFile(byte[] file)
+    public byte[] setBLOBImageFile(byte[] file) // where is this being called? check later
     {
         blob_file = file;
         return blob_file;
@@ -181,7 +206,7 @@ public class UserDBOperator {
         return full_name;
     }
                 
-    public UserDBOperator(Connection user_db)
+    public DBOperator(Connection user_db)
     {
         user_database = user_db;
         pstmt = null; // reused for queries
@@ -189,7 +214,7 @@ public class UserDBOperator {
     }
     
     // RETURNS: user id 
-    public int FindExistingUser() // returns the user ID for usage throughout the program
+    public int FindExistingUser() 
     {
             try{
                 pstmt = user_database.prepareStatement("SELECT * from Users where email= ? and password = ?");
@@ -228,7 +253,7 @@ public class UserDBOperator {
             }
             
             try{
-                stmt.close();
+                pstmt.close();
                 rs.close();
             }
             catch(SQLException e)
@@ -273,6 +298,7 @@ public class UserDBOperator {
     
     public int createBook()
     {
+        // verify if the book alr exists-> UNIQUE in sqlite
         try{
             PreparedStatement pstmt = user_database.prepareStatement("INSERT into Books (book_name, author, num_pages, image) VALUES(?, ?, ?, ?)");
             pstmt.setBytes(4, blob_file);
@@ -296,7 +322,6 @@ public class UserDBOperator {
     
    public byte[] convertFiletoByte(File file) // returns the byte contents 
    {
-       // use book_img_file
        try{
            FileInputStream input = new FileInputStream(file); // holds file contents
            return input.readAllBytes();  
@@ -309,11 +334,12 @@ public class UserDBOperator {
        return null;
    }
    
-    
-   /* public byte[] getBLOBFile()
-    {
-        
-    }
+  /* public File convertBytetoFile(byte[] img_byte)
+   {
+       try{
+           ByteArrayInputStream byte_input = new ByteArrayInputStream(img_byte);
+           return byte_input.
+       }
+   }
 */
-
 }

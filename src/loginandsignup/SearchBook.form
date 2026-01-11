@@ -31,19 +31,18 @@
                           <Component id="jScrollPane1" min="-2" pref="488" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Component id="jLabel1" min="-2" pref="421" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+                              <EmptySpace min="34" pref="34" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="search_bar" min="-2" pref="455" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                      <Component id="search_bar" min="-2" pref="489" max="-2" attributes="0"/>
                   </Group>
               </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="author_search_btwn" max="32767" attributes="0"/>
+                  <Component id="author_search_btn" max="32767" attributes="0"/>
                   <Component id="title_search_btn" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="0" pref="123" max="32767" attributes="0"/>
@@ -61,7 +60,7 @@
                       <Component id="search_bar" min="-2" pref="34" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
-                      <Component id="author_search_btwn" min="-2" max="-2" attributes="0"/>
+                      <Component id="author_search_btn" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                       <Component id="title_search_btn" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -112,10 +111,13 @@
         <Property name="text" type="java.lang.String" value="jTextField1"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="author_search_btwn">
+    <Component class="javax.swing.JButton" name="author_search_btn">
       <Properties>
         <Property name="text" type="java.lang.String" value="By Author"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="author_search_btnActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="title_search_btn">
       <Properties>

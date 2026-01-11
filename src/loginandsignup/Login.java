@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package loginandsignup;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import loginandsignup.DBOperator;
 
 public class Login extends javax.swing.JFrame {
     
@@ -19,8 +16,7 @@ public class Login extends javax.swing.JFrame {
         System.out.println(System.getProperty("user.dir"));
         DatabaseConnector user_db_connector = new DatabaseConnector("LoginAndSignUp.db");
         user_db = user_db_connector.connect();
-        db_operator = new UserDBOperator(user_db);  
-
+        db_operator = new DBOperator(user_db);  
     }
 
     /**
@@ -46,7 +42,6 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("LOGIN");
-        setPreferredSize(new java.awt.Dimension(800, 500));
 
         jPanel1.setPreferredSize(new java.awt.Dimension(800, 500));
         jPanel1.setLayout(null);
@@ -123,7 +118,7 @@ public class Login extends javax.swing.JFrame {
                         .addGap(29, 29, 29)
                         .addComponent(signup_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(login_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
         LeftLayout.setVerticalGroup(
             LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,11 +139,11 @@ public class Login extends javax.swing.JFrame {
                 .addGroup(LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(signup_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
 
         jPanel1.add(Left);
-        Left.setBounds(400, 0, 400, 500);
+        Left.setBounds(400, -10, 410, 510);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -193,10 +188,11 @@ public class Login extends javax.swing.JFrame {
                 if(user_id != 0 && user_id != -1)
                 {
                     System.out.println("Login successful!");
-                    BookDetails BookDetailsFrame = new BookDetails(db_operator);
+                    
+                    // go to the home page (pull from main)
+                    BookCollection book_collection_window = new BookCollection(db_operator);
                     this.setVisible(false);
                 }
-                    // go to home screen & create the user object 
                 else
                     System.out.println("Wrong credentials, please try again!");
             }
@@ -209,8 +205,6 @@ public class Login extends javax.swing.JFrame {
         SignupFrame.pack();
         SignupFrame.setLocationRelativeTo(null);
         this.setVisible(false); // hides current window 
-
-        
     }//GEN-LAST:event_signup_btnActionPerformed
 
     private void password_textActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_password_textActionPerformed
@@ -237,5 +231,5 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton signup_btn;
     // End of variables declaration//GEN-END:variables
     private Connection user_db;
-    private UserDBOperator db_operator;
+    private DBOperator db_operator;
 }
