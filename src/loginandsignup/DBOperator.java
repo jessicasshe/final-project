@@ -123,13 +123,14 @@ public class DBOperator {
                     pstmt.setString(1, title);
             }
             rs = pstmt.executeQuery();
-            rs.close();
-            pstmt.close();
             
             while(rs.next())
             {
                 book_names.add(rs.getString("book_name"));
             }
+            rs.close();
+            pstmt.close();
+
             return book_names;
         }
         catch(SQLException e)
