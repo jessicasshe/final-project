@@ -28,9 +28,9 @@ public class BookCollection extends javax.swing.JFrame {
         this.db_operator = db_operator;
         
         // initialize list models
-        reading_list.setModel(db_operator.getBookNames("reading"));
-        to_read_list.setModel(db_operator.getBookNames("to_read"));
-        finished_list.setModel(db_operator.getBookNames("finished"));
+        reading_list.setModel(db_operator.getBookNames("Reading"));
+        to_read_list.setModel(db_operator.getBookNames("To-Read"));
+        finished_list.setModel(db_operator.getBookNames("Finished"));
     }
     
    
@@ -206,9 +206,10 @@ public class BookCollection extends javax.swing.JFrame {
 
         // show details (create SingleBookInfo object)
         this.setVisible(false);
-            int book_id = db_operator.getBookId(reading_list.getSelectedValue());
-            ResultSet details = db_operator.getFullBookDetails(book_id);
-            manager.setSingleBookWindow(new SingleBookInfo(db_operator, details, manager)); // might need unique constraint for name
+        int book_id = db_operator.getBookId(reading_list.getSelectedValue());
+        System.out.println("The book id from the book you clicked is " + book_id);
+        ResultSet details = db_operator.getFullBookDetails(book_id);
+        manager.setSingleBookWindow(new SingleBookInfo(db_operator, details, manager)); // might need unique constraint for name
 
     }//GEN-LAST:event_reading_listMouseClicked
 

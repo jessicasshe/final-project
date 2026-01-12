@@ -13,14 +13,17 @@ public class SingleBookInfo extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(SingleBookInfo.class.getName());
 
-    public SingleBookInfo(DBOperator db_operator, ResultSet details, WindowManager manager) {
+    public SingleBookInfo(DBOperator db_operator, ResultSet details, WindowManager manager){
         this.db_operator = db_operator;
         initComponents();
         this.setVisible(true);
+        img_file_chooser.setVisible(false);
+        confirm_option_pane.setVisible(false);
         this.pack();
         this.setLocationRelativeTo(null);
         this.manager = manager;
         this.details = details;
+        setBookDetails();
         confirm_option_pane.setVisible(false);
     }
     
@@ -33,7 +36,7 @@ public class SingleBookInfo extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        BookDetailsPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         book_img = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -50,224 +53,228 @@ public class SingleBookInfo extends javax.swing.JFrame {
         edit_author_btn = new javax.swing.JButton();
         add_book_btn = new javax.swing.JButton();
         img_file_chooser = new javax.swing.JFileChooser();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        book_img1 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        book_name1 = new javax.swing.JLabel();
-        book_author1 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        back_btn1 = new javax.swing.JButton();
-        users_completed1 = new javax.swing.JLabel();
-        open_reading_notes_btn1 = new javax.swing.JButton();
-        change_cover_btn1 = new javax.swing.JButton();
-        edit_users_btn1 = new javax.swing.JButton();
-        edit_name_btn1 = new javax.swing.JButton();
-        edit_author_btn1 = new javax.swing.JButton();
-        img_file_chooser1 = new javax.swing.JFileChooser();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        confirm_option_pane = new javax.swing.JOptionPane();
+        collection_selector = new javax.swing.JComboBox<>();
         edit_pages_btn = new javax.swing.JButton();
         remove_from_collection_btn = new javax.swing.JButton();
         progress_bar = new javax.swing.JProgressBar();
         jLabel5 = new javax.swing.JLabel();
         shelf_name = new javax.swing.JLabel();
-        confirm_option_pane = new javax.swing.JOptionPane();
-        collection_selector = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 500));
         getContentPane().setLayout(null);
 
-        jPanel1.setLayout(null);
-
         jLabel1.setFont(new java.awt.Font("Palatino", 0, 36)); // NOI18N
         jLabel1.setText("Book Details");
-        jPanel1.add(jLabel1);
-        jLabel1.setBounds(44, 32, 254, 56);
 
         book_img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/loginandsignup/_.jpeg"))); // NOI18N
         book_img.setText("jLabel2");
-        jPanel1.add(book_img);
-        book_img.setBounds(510, 90, 278, 320);
 
         jLabel3.setText("Name");
-        jPanel1.add(jLabel3);
-        jLabel3.setBounds(50, 120, 34, 17);
 
         jLabel4.setText("Author");
-        jPanel1.add(jLabel4);
-        jLabel4.setBounds(50, 190, 37, 17);
 
         book_name.setText("Insert Name");
-        jPanel1.add(book_name);
-        book_name.setBounds(130, 120, 260, 17);
+        book_name.setPreferredSize(new java.awt.Dimension(310, 17));
 
         book_author.setText("Insert Author");
-        jPanel1.add(book_author);
-        book_author.setBounds(130, 190, 263, 17);
+        book_author.setPreferredSize(new java.awt.Dimension(273, 17));
 
         jLabel8.setText("Users Finished");
-        jPanel1.add(jLabel8);
-        jLabel8.setBounds(50, 250, 87, 17);
 
         back_btn.setText("Back to Book Collection");
         back_btn.addActionListener(this::back_btnActionPerformed);
-        jPanel1.add(back_btn);
-        back_btn.setBounds(40, 440, 189, 39);
 
         users_completed.setText("Insert # Users");
-        jPanel1.add(users_completed);
-        users_completed.setBounds(160, 250, 220, 17);
+        users_completed.setPreferredSize(new java.awt.Dimension(220, 17));
 
         open_reading_notes_btn.setText("Open Reading Notes");
         open_reading_notes_btn.addActionListener(this::open_reading_notes_btnActionPerformed);
-        jPanel1.add(open_reading_notes_btn);
-        open_reading_notes_btn.setBounds(40, 340, 200, 60);
 
         change_cover_btn.setText("Change Book Cover");
         change_cover_btn.addActionListener(this::change_cover_btnActionPerformed);
-        jPanel1.add(change_cover_btn);
-        change_cover_btn.setBounds(510, 420, 160, 23);
 
         edit_users_btn.setText("Edit");
-        jPanel1.add(edit_users_btn);
-        edit_users_btn.setBounds(400, 250, 78, 23);
 
         edit_name_btn.setText("Edit");
         edit_name_btn.addActionListener(this::edit_name_btnActionPerformed);
-        jPanel1.add(edit_name_btn);
-        edit_name_btn.setBounds(400, 110, 72, 23);
 
         edit_author_btn.setText("Edit");
         edit_author_btn.addActionListener(this::edit_author_btnActionPerformed);
-        jPanel1.add(edit_author_btn);
-        edit_author_btn.setBounds(400, 180, 78, 23);
 
         add_book_btn.setText("Add Book To Collection");
         add_book_btn.addActionListener(this::add_book_btnActionPerformed);
-        jPanel1.add(add_book_btn);
-        add_book_btn.setBounds(290, 340, 190, 30);
 
         img_file_chooser.setDialogTitle("");
-        jPanel1.add(img_file_chooser);
-        img_file_chooser.setBounds(560, 90, 512, 326);
-
-        jPanel2.setLayout(null);
-
-        jLabel2.setFont(new java.awt.Font("Palatino", 0, 36)); // NOI18N
-        jLabel2.setText("Book Details");
-        jPanel2.add(jLabel2);
-        jLabel2.setBounds(44, 32, 254, 56);
-
-        book_img1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/loginandsignup/_.jpeg"))); // NOI18N
-        book_img1.setText("jLabel2");
-        jPanel2.add(book_img1);
-        book_img1.setBounds(510, 90, 278, 320);
-
-        jLabel6.setText("Name");
-        jPanel2.add(jLabel6);
-        jLabel6.setBounds(50, 120, 34, 17);
-
-        jLabel7.setText("Author");
-        jPanel2.add(jLabel7);
-        jLabel7.setBounds(50, 190, 37, 17);
-
-        book_name1.setText("Insert Name");
-        jPanel2.add(book_name1);
-        book_name1.setBounds(130, 120, 260, 17);
-
-        book_author1.setText("Insert Author");
-        jPanel2.add(book_author1);
-        book_author1.setBounds(130, 190, 263, 17);
-
-        jLabel10.setText("Users Finished");
-        jPanel2.add(jLabel10);
-        jLabel10.setBounds(50, 250, 87, 17);
-
-        back_btn1.setText("Back to Book Collection");
-        back_btn1.addActionListener(this::back_btn1ActionPerformed);
-        jPanel2.add(back_btn1);
-        back_btn1.setBounds(40, 440, 189, 39);
-
-        users_completed1.setText("Insert # Users");
-        jPanel2.add(users_completed1);
-        users_completed1.setBounds(160, 250, 220, 17);
-
-        open_reading_notes_btn1.setText("Open Reading Notes");
-        open_reading_notes_btn1.addActionListener(this::open_reading_notes_btn1ActionPerformed);
-        jPanel2.add(open_reading_notes_btn1);
-        open_reading_notes_btn1.setBounds(40, 340, 200, 60);
-
-        change_cover_btn1.setText("Change Book Cover");
-        change_cover_btn1.addActionListener(this::change_cover_btn1ActionPerformed);
-        jPanel2.add(change_cover_btn1);
-        change_cover_btn1.setBounds(510, 420, 160, 23);
-
-        edit_users_btn1.setText("Edit");
-        jPanel2.add(edit_users_btn1);
-        edit_users_btn1.setBounds(400, 250, 78, 23);
-
-        edit_name_btn1.setText("Edit");
-        edit_name_btn1.addActionListener(this::edit_name_btn1ActionPerformed);
-        jPanel2.add(edit_name_btn1);
-        edit_name_btn1.setBounds(400, 110, 72, 23);
-
-        edit_author_btn1.setText("Edit");
-        edit_author_btn1.addActionListener(this::edit_author_btn1ActionPerformed);
-        jPanel2.add(edit_author_btn1);
-        edit_author_btn1.setBounds(400, 180, 78, 23);
-
-        img_file_chooser1.setDialogTitle("");
-        jPanel2.add(img_file_chooser1);
-        img_file_chooser1.setBounds(560, 90, 512, 326);
-
-        jLabel11.setText("Pages");
-        jPanel2.add(jLabel11);
-        jLabel11.setBounds(50, 300, 36, 17);
-
-        jLabel12.setText("Insert # Pages");
-        jPanel2.add(jLabel12);
-        jLabel12.setBounds(150, 300, 120, 17);
-
-        edit_pages_btn.setText("Edit");
-        edit_pages_btn.addActionListener(this::edit_pages_btnActionPerformed);
-        jPanel2.add(edit_pages_btn);
-        edit_pages_btn.setBounds(400, 290, 72, 23);
-
-        remove_from_collection_btn.setText("Remove From Collection");
-        remove_from_collection_btn.addActionListener(this::remove_from_collection_btnActionPerformed);
-        jPanel2.add(remove_from_collection_btn);
-        remove_from_collection_btn.setBounds(290, 373, 190, 30);
-        jPanel2.add(progress_bar);
-        progress_bar.setBounds(530, 40, 240, 39);
-
-        jLabel5.setText("Reading Progress");
-        jPanel2.add(jLabel5);
-        jLabel5.setBounds(540, 20, 103, 17);
-
-        shelf_name.setText("Current Location");
-        jPanel2.add(shelf_name);
-        shelf_name.setBounds(270, 40, 100, 17);
+        img_file_chooser.addActionListener(this::img_file_chooserActionPerformed);
 
         confirm_option_pane.setMessage("Confirm changes?");
-        jPanel2.add(confirm_option_pane);
-        confirm_option_pane.setBounds(250, 190, 262, 90);
 
         collection_selector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Reading", "To-Read", "Finished" }));
         collection_selector.setSelectedItem(collection_selector);
         collection_selector.setToolTipText("Change List");
         collection_selector.addActionListener(this::collection_selectorActionPerformed);
-        jPanel2.add(collection_selector);
-        collection_selector.setBounds(380, 40, 110, 23);
+
+        edit_pages_btn.setText("Edit");
+        edit_pages_btn.addActionListener(this::edit_pages_btnActionPerformed);
+
+        remove_from_collection_btn.setText("Remove From Collection");
+        remove_from_collection_btn.addActionListener(this::remove_from_collection_btnActionPerformed);
+
+        progress_bar.setPreferredSize(new java.awt.Dimension(240, 39));
+
+        jLabel5.setText("Reading Progress");
+
+        shelf_name.setText("Current Location");
+
+        javax.swing.GroupLayout BookDetailsPanelLayout = new javax.swing.GroupLayout(BookDetailsPanel);
+        BookDetailsPanel.setLayout(BookDetailsPanelLayout);
+        BookDetailsPanelLayout.setHorizontalGroup(
+            BookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                .addGroup(BookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(BookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(open_reading_notes_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10)
+                                .addGroup(BookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(confirm_option_pane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                                        .addGap(260, 260, 260)
+                                        .addComponent(book_img, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                                        .addGap(150, 150, 150)
+                                        .addComponent(edit_pages_btn))))
+                            .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                                .addGap(270, 270, 270)
+                                .addComponent(remove_from_collection_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel4)
+                            .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                                .addGap(380, 380, 380)
+                                .addComponent(edit_author_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                                .addGap(60, 60, 60)
+                                .addComponent(book_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel8)
+                            .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                                .addGap(60, 60, 60)
+                                .addComponent(book_author, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                                .addGap(140, 140, 140)
+                                .addComponent(users_completed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                                .addGap(380, 380, 380)
+                                .addComponent(edit_users_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                                .addGap(380, 380, 380)
+                                .addComponent(edit_name_btn))
+                            .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                                .addGap(130, 130, 130)
+                                .addComponent(img_file_chooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel3)
+                            .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                                .addGap(270, 270, 270)
+                                .addComponent(add_book_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addComponent(back_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(281, 281, 281)
+                        .addComponent(change_cover_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(12, Short.MAX_VALUE))
+            .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(BookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(shelf_name, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(collection_selector, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(progress_bar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(38, 38, 38))
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(346, 346, 346)
+                        .addComponent(jLabel5)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+        BookDetailsPanelLayout.setVerticalGroup(
+            BookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(BookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                        .addComponent(progress_bar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(11, 11, 11))
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGroup(BookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(shelf_name)
+                            .addComponent(collection_selector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(BookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(250, 250, 250)
+                        .addComponent(open_reading_notes_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(100, 100, 100)
+                        .addComponent(confirm_option_pane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(book_img, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(200, 200, 200)
+                        .addComponent(edit_pages_btn))
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(283, 283, 283)
+                        .addComponent(remove_from_collection_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(100, 100, 100)
+                        .addComponent(jLabel4))
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(90, 90, 90)
+                        .addComponent(edit_author_btn))
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(book_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(160, 160, 160)
+                        .addComponent(jLabel8))
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(100, 100, 100)
+                        .addComponent(book_author, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(160, 160, 160)
+                        .addComponent(users_completed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(160, 160, 160)
+                        .addComponent(edit_users_btn))
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(edit_name_btn))
+                    .addComponent(img_file_chooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel3))
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(250, 250, 250)
+                        .addComponent(add_book_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(4, 4, 4)
+                .addGroup(BookDetailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(BookDetailsPanelLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(back_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(change_cover_btn)))
+        );
+
         collection_selector.getAccessibleContext().setAccessibleDescription("");
 
-        jPanel1.add(jPanel2);
-        jPanel2.setBounds(0, 0, 800, 490);
-
-        getContentPane().add(jPanel1);
-        jPanel1.setBounds(0, 0, 800, 490);
+        getContentPane().add(BookDetailsPanel);
+        BookDetailsPanel.setBounds(0, 0, 800, 490);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -288,34 +295,42 @@ public class SingleBookInfo extends javax.swing.JFrame {
     {
         // db_operator queries for the resultset to get all info at once
         try{
-            
-        details = db_operator.getFullBookDetails(details.getInt("book_id"));
         
+        details = db_operator.getFullBookDetails(details.getInt("book_id"));
+        System.out.println("Book id: " + details.getInt("book_id"));
+        System.out.println("Page progress: " + details.getInt("page_progress"));
+        System.out.println("Book name: " + details.getString("book_name"));
         // INVOKE LATER
         
         // try catch have to be specific to the inside method
         
             // call helper function for editing other labels 
-            book_name.setText(details.getString("book_name"));
-            book_author.setText(details.getString("author"));
-            //book_img
-            book_img.setIcon(new ImageIcon(details.getBlob("book_img").getBinaryStream().readAllBytes()));
+        book_name.setText(details.getString("book_name"));
+        book_author.setText(details.getString("author"));
+        users_completed.setText(String.valueOf(details.getInt("total_users_read")));
+        progress_bar.setMinimum(0);
+        progress_bar.setMaximum(details.getInt("num_pages"));
+        progress_bar.setValue(details.getInt("page_progress")); // must check using a condition for the edit
+
+        if(details.getBytes("image") != null)
+        {
+                
+                book_img.setIcon(new ImageIcon(details.getBytes("image")));
+                
+            
+        }
+        else
+        {
+            System.out.println("No image found in database");
+        }
       
-            // setup the progress bar
-            users_completed.setText(String.valueOf(details.getInt("total_users_read")));
-            progress_bar.setMinimum(0);
-            progress_bar.setMaximum(100);
-            progress_bar.setValue(details.getInt("page_progress")/100);
+            // setup the progress bar        
         }
         catch(SQLException e)
         {
-            System.out.println("Someething went wrong when trying to query for book details");
+            System.out.println("Something went wrong when trying to query for book details");
             e.printStackTrace();
         }
-        catch(IOException e)
-        {
-            e.printStackTrace();
-        } 
    }
             
     private void edit_name_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_name_btnActionPerformed
@@ -330,21 +345,25 @@ public class SingleBookInfo extends javax.swing.JFrame {
 
         // set values before func call USE UPDATE FOR RESULTSET INSTEAD!!
         try{
-        db_operator.setShelfType(collection_selector.getSelectedItem().toString()); // get option pan name
-        db_operator.setBookId(details.getInt("book_id")); // needed for most recent id update 
+        db_operator.setShelfType(collection_selector.getSelectedItem().toString());
+
+        db_operator.setBookId(details.getInt("book_id")); 
         db_operator.setPageProgress(progress_bar.getValue());
         db_operator.setAuthor(book_author.getText());
         db_operator.setTitle(book_name.getText());
         db_operator.setNumUsersRead(Integer.parseInt(users_completed.getText()));
-        byte[] blob_file = db_operator.convertFiletoByte(book_img_file);
-        db_operator.setBLOBImageFile(blob_file);
+        db_operator.setBLOBImageFile(details.getBytes("image"));
     
         // must update even if no changes because its not guaranteed that there were no total edits (unless u add a condition in the edits buttons)
-        db_operator.updateBooksColumns();
-        db_operator.updateUsersBooksColumns();
+        //db_operator.updateBooksColumns();
+        //db_operator.updateUsersBooksColumns();
         details = db_operator.getFullBookDetails(details.getInt("book_id")); // create a helper method
-        db_operator.addBookToUserBooks(details);
+        int added_book_id = db_operator.addBookToUserBooks(details);
+        if(added_book_id != 0)
+        {
+            System.out.println("Successfully added book to UserBooks!");
 
+        }
         }
         catch(SQLException e)
         {
@@ -358,29 +377,12 @@ public class SingleBookInfo extends javax.swing.JFrame {
         img_file_chooser.setVisible(true);
 
         book_img_file = new File(img_file_chooser.getSelectedFile().getPath());
-        book_img.setIcon(new ImageIcon(book_img_file.getPath()));
+        if(book_img_file != null)
+        {
+            book_img.setIcon(new ImageIcon(book_img_file.getPath()));
+        }
   
     }//GEN-LAST:event_change_cover_btnActionPerformed
-
-    private void back_btn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back_btn1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_back_btn1ActionPerformed
-
-    private void open_reading_notes_btn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_open_reading_notes_btn1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_open_reading_notes_btn1ActionPerformed
-
-    private void change_cover_btn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_change_cover_btn1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_change_cover_btn1ActionPerformed
-
-    private void edit_name_btn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_name_btn1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_edit_name_btn1ActionPerformed
-
-    private void edit_author_btn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_author_btn1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_edit_author_btn1ActionPerformed
 
     private void edit_pages_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_pages_btnActionPerformed
         // TODO add your handling code here:
@@ -391,58 +393,46 @@ public class SingleBookInfo extends javax.swing.JFrame {
     }//GEN-LAST:event_remove_from_collection_btnActionPerformed
 
     private void collection_selectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_collection_selectorActionPerformed
-        // TODO add your handling code here:
+        
+
     }//GEN-LAST:event_collection_selectorActionPerformed
+
+    private void img_file_chooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_img_file_chooserActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_img_file_chooserActionPerformed
 
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel BookDetailsPanel;
     private javax.swing.JButton add_book_btn;
     private javax.swing.JButton back_btn;
-    private javax.swing.JButton back_btn1;
     private javax.swing.JLabel book_author;
-    private javax.swing.JLabel book_author1;
     private javax.swing.JLabel book_img;
-    private javax.swing.JLabel book_img1;
     private javax.swing.JLabel book_name;
-    private javax.swing.JLabel book_name1;
     private javax.swing.JButton change_cover_btn;
-    private javax.swing.JButton change_cover_btn1;
     private javax.swing.JComboBox<String> collection_selector;
     private javax.swing.JOptionPane confirm_option_pane;
     private javax.swing.JButton edit_author_btn;
-    private javax.swing.JButton edit_author_btn1;
     private javax.swing.JButton edit_name_btn;
-    private javax.swing.JButton edit_name_btn1;
     private javax.swing.JButton edit_pages_btn;
     private javax.swing.JButton edit_users_btn;
-    private javax.swing.JButton edit_users_btn1;
     private javax.swing.JFileChooser img_file_chooser;
-    private javax.swing.JFileChooser img_file_chooser1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JButton open_reading_notes_btn;
-    private javax.swing.JButton open_reading_notes_btn1;
     private javax.swing.JProgressBar progress_bar;
     private javax.swing.JButton remove_from_collection_btn;
     private javax.swing.JLabel shelf_name;
     private javax.swing.JLabel users_completed;
-    private javax.swing.JLabel users_completed1;
     // End of variables declaration//GEN-END:variables
     private DBOperator db_operator;
     private ResultSet details;
     private File book_img_file;
     boolean edits_made;
     private WindowManager manager;
+    private byte[] blob_file;
 }

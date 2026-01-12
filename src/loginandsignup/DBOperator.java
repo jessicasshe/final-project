@@ -76,6 +76,7 @@ public class DBOperator {
     {
         try{
         pstmt = user_database.prepareStatement("UPDATE Books SET book_author = ?, book_name = ? , total_users_read = ?, image = ? , num_pages = ? WHERE book_id = ? ");
+        //pstmt.setString()...
         return pstmt.executeUpdate();
         }
         catch(SQLException e)
@@ -107,22 +108,45 @@ public class DBOperator {
         try{
             
             // check for duplication
-            pstmt = user_database.prepareStatement("SELECT * from UsersBooks INNER JOIN Books where Users.user_id = Books.book_id AND where user_id = ? AND page_progress = ? AND shelf_type = ? AND book_id = ? AND total_users_read = ?");
-            pstmt.setInt(1, details.getInt("user_id"));
-            pstmt.setInt(2, details.getInt("page_progress"));
-            pstmt.setString(3, details.getString("shelf_type"));
-            pstmt.setInt(4, details.getInt("book_id"));
-            pstmt.setInt(5, details.getInt("num_users_read"));
+            pstmt = user_database.prepareStatement("SELECT * from UsersBooks WHERE book_id = ? AND user_id = ? AND page_progress = ?");
+            //System.out.println("Book id: " + details.getInt("book_id"));
+            pstmt.setInt(1, book_id);
+            
+           // System.out.println("User id: " + details.getInt("user_id"));
+            pstmt.setInt(2, user_id);
+            
+            //System.out.println("Page progress: " + details.getInt("page_progress"));
+            pstmt.setInt(3, page_progress);
+                                                
             rs = pstmt.executeQuery();
             
             if(rs.next())
             {
-                System.out.println("This book & its version already exists within the club");
-                return 0;
+                // Check if shelf-type is different 
+                System.out.println("Shelf type of ResultSet: " + rs.getString("shelf_type"));
+                System.out.println("Shelf type of Single Book: " + shelf_type);
+                if(rs.getString("shelf_type").equals(shelf_type))
+                {
+                    System.out.println("You already have this book listed!");
+                    return 0;
+
+                }
+                else{
+                    System.out.println("Switching the shelf the book is listed in...");
+                    pstmt = user_database.prepareStatement("UPDATE UsersBooks SET shelf_type = ? ");
+                    pstmt.setString(1, shelf_type);
+                    int id = pstmt.executeUpdate();
+                    return id;
+                }
             }
 
             // insertion once valid
             pstmt = user_database.prepareStatement("INSERT into UsersBooks (user_id, page_progress, shelf_type, book_id) VALUES(?, ?, ?, ?)");
+            pstmt.setInt(1, user_id);
+            pstmt.setInt(2, page_progress);
+            pstmt.setString(3, shelf_type);
+            pstmt.setInt(4, book_id);
+            
             int id = pstmt.executeUpdate();
             pstmt.close();
             return id;
@@ -143,7 +167,7 @@ public class DBOperator {
         
         try
         {
-            pstmt = user_database.prepareStatement("SELECT book_name FROM Books JOIN UsersBooks WHERE Books.book_id = UsersBooks.book_id AND UsersBooks.shelf_type = ?");
+            pstmt = user_database.prepareStatement("SELECT book_name FROM Books JOIN UsersBooks ON Books.book_id = UsersBooks.book_id WHERE UsersBooks.shelf_type = ?");
             pstmt.setString(1, shelf_type);
             rs = pstmt.executeQuery();
 
@@ -205,7 +229,7 @@ public class DBOperator {
         try
         {
             // left join (Books table) bc some books might not belong to the user yet
-            pstmt = user_database.prepareStatement("SELECT * from Books LEFT JOIN UsersBooks WHERE Books.book_id = UsersBooks.book_id AND book_name = '"+title+"'");
+            pstmt = user_database.prepareStatement("SELECT * from Books LEFT JOIN UsersBooks WHERE Books.book_id ="+book_id+" AND Books.book_id = UsersBooks.book_id");
             return pstmt.executeQuery(); // returns all book info personal to user & to general book
         }
         
