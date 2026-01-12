@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.ByteArrayInputStream;
 import javax.swing.DefaultListModel;
+import java.util.ArrayList;
 
 public class DBOperator {
     // variables are given values using the setter methods 
@@ -36,6 +37,8 @@ public class DBOperator {
     int page_progress;
     String shelf_type;
     int book_id;    
+    
+   
      
     public String setShelfType(String shelf_name)
     {
@@ -102,6 +105,41 @@ public class DBOperator {
         return -1;
     }
     
+    public ArrayList<String> getSearchResults(String search_type)
+    {
+        ArrayList<String> book_names = new ArrayList<>();
+        try
+        {
+            switch(search_type)
+            {   
+                case "Author":
+                    System.out.println("Searching by author..");
+                    pstmt = user_database.prepareStatement("SELECT book_name FROM Books where author = ?");
+                    pstmt.setString(1,author);
+
+                case "Title":
+                    System.out.println("Searching by title...");
+                    pstmt = user_database.prepareStatement("SELECT book_name FROM Books where book_name = ?");
+                    pstmt.setString(1, title);
+            }
+            rs = pstmt.executeQuery();
+            rs.close();
+            pstmt.close();
+            
+            while(rs.next())
+            {
+                book_names.add(rs.getString("book_name"));
+            }
+            return book_names;
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Something went wrong when searching for books");
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
     public int addBookToUserBooks(ResultSet details) // already given the row itself so it isnt necessary to set the attribute variables
     {
         
@@ -161,6 +199,7 @@ public class DBOperator {
         return -1;
     }
 
+
     public DefaultListModel<String> getBookNames(String shelf_type) // overloaded method 
     {
         DefaultListModel<String> curr_books = new DefaultListModel<>();
@@ -210,6 +249,55 @@ public class DBOperator {
         return null;
         }
     }
+   
+    public String getSingleBookName(ResultSet book_row)
+    {
+        try
+        {
+            return book_row.getString("book_name");
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Something went wrong when reading book name from row");
+            e.printStackTrace();
+        }
+        return null;   
+    }
+    
+    public DefaultListModel<String> getBookNames(SearchBook search_book_window, String search_value) // to know that you're calling it from search book
+    {
+        DefaultListModel<String> book_names = new DefaultListModel<>();        
+        try
+        { 
+            switch(search_value)
+            {
+                case "Author":
+                    System.out.println("Searching by author");
+                    pstmt = user_database.prepareStatement("SELECT book_name FROM Books WHERE author = ?");
+                
+                case "Title":
+                    System.out.println("Searching by title");
+                    pstmt = user_database.prepareStatement("SELECT book_name FROM Books WHERE book_name = ?");
+                
+            }
+            pstmt = user_database.prepareStatement("SELECT book_name FROM Books WHERE "); // change logic later for userbooks
+            rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                System.out.println("Book being added is called: " + rs.getString("book_name"));
+                book_names.addElement(rs.getString("book_name"));           
+            }     
+            return book_names;
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Something went wrong when querying from the book database");
+            e.printStackTrace();
+        
+        return null;
+        }
+    }
+    
     public int getBookId(String name)
     {
         try
@@ -242,6 +330,7 @@ public class DBOperator {
         }
         return null;
     }
+    
        
     
     public byte[] setBLOBImageFile(byte[] file) // where is this being called? check later

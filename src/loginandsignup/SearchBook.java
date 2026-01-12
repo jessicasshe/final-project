@@ -3,6 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package loginandsignup;
+import javax.swing.DefaultListModel;
+import java.util.ArrayList;
+
 
 /**
  *
@@ -21,7 +24,12 @@ public class SearchBook extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.db_operator = db_operator;
         this.manager = manager;
+        
         initComponents();
+        
+        // initialize the default list model for the search list 
+        search_list_model = new DefaultListModel();
+        book_result_list.setModel(search_list_model);
     }
 
     /**
@@ -53,6 +61,7 @@ public class SearchBook extends javax.swing.JFrame {
         jLabel1.setText("Search Existing Books");
 
         search_bar.setText("jTextField1");
+        search_bar.addActionListener(this::search_barActionPerformed);
 
         author_search_btn.setText("By Author");
         author_search_btn.addActionListener(this::author_search_btnActionPerformed);
@@ -104,12 +113,39 @@ public class SearchBook extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void title_search_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_title_search_btnActionPerformed
-        // TODO add your handling code here:
+        // call DBOperators search by author method passing in the author
+        db_operator.setTitle(search_bar.getText());
+        search_results = db_operator.getSearchResults("Title");
+        
+        // create a helper method for search validation
+        
+                
+        // update the model by looping through the resultset 
+        updateSearchResultsUI();
     }//GEN-LAST:event_title_search_btnActionPerformed
 
     private void author_search_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_author_search_btnActionPerformed
         // TODO add your handling code here:
+        db_operator.setAuthor(search_bar.getText());
+        search_results = db_operator.getSearchResults("Author");
+        updateSearchResultsUI();
+        
+        
     }//GEN-LAST:event_author_search_btnActionPerformed
+
+    private void search_barActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_barActionPerformed
+    
+        
+    }//GEN-LAST:event_search_barActionPerformed
+    
+    private void updateSearchResultsUI()
+    {
+        for(int i = 0; i < search_results.size(); i++)
+        {
+            search_list_model.addElement(search_results.get(i).toString());// want
+        }
+
+    }
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -122,4 +158,6 @@ public class SearchBook extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
     private DBOperator db_operator;
     private WindowManager manager;
+    private ArrayList search_results;
+    private DefaultListModel<String> search_list_model;
 }

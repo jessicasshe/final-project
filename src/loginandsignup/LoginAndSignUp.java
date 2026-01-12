@@ -12,6 +12,10 @@ public class LoginAndSignUp {
         window_manager.setLoginWindow(new Login(window_manager));
         // center 
         
+        
+        // Testing purposes only: 
+        //GridLayoutTester layout_tester = new GridLayoutTester();
+        
     }
     
 }
