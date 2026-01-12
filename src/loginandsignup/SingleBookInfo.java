@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.swing.SwingUtilities;
 import java.io.File;
 import java.io.IOException;
+import javax.swing.DefaultListModel;
 
 
 public class SingleBookInfo extends javax.swing.JFrame {
@@ -287,6 +288,12 @@ public class SingleBookInfo extends javax.swing.JFrame {
         
     }//GEN-LAST:event_back_btnActionPerformed
 
+    public String setOldShelfType(String shelf_type)
+    {
+        old_shelf_type = shelf_type;
+        return old_shelf_type;
+    }
+    
     private void open_reading_notes_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_open_reading_notes_btnActionPerformed
         // open reading notes window & use overloaded method to give the specific book 
     }//GEN-LAST:event_open_reading_notes_btnActionPerformed
@@ -300,11 +307,7 @@ public class SingleBookInfo extends javax.swing.JFrame {
         System.out.println("Book id: " + details.getInt("book_id"));
         System.out.println("Page progress: " + details.getInt("page_progress"));
         System.out.println("Book name: " + details.getString("book_name"));
-        // INVOKE LATER
-        
-        // try catch have to be specific to the inside method
-        
-            // call helper function for editing other labels 
+        collection_selector.setSelectedItem(details.getString("shelf_type"));
         book_name.setText(details.getString("book_name"));
         book_author.setText(details.getString("author"));
         users_completed.setText(String.valueOf(details.getInt("total_users_read")));
@@ -362,7 +365,8 @@ public class SingleBookInfo extends javax.swing.JFrame {
         if(added_book_id != 0)
         {
             System.out.println("Successfully added book to UserBooks!");
-
+            // update the list model
+            update_collection_lists("switch", old_shelf_type);
         }
         }
         catch(SQLException e)
@@ -373,9 +377,33 @@ public class SingleBookInfo extends javax.swing.JFrame {
 
     }//GEN-LAST:event_add_book_btnActionPerformed
 
+    private void update_collection_lists(String action)
+    {   DefaultListModel<String> list = manager.getBookCollectionWindow().getListReference(collection_selector.getSelectedItem().toString());
+        String name = book_name.getText();
+
+        switch(action)
+        {
+            case "add":
+                list.addElement(name);
+            case "remove":
+                list.removeElement(name);
+        }
+    }
+    
+    private void update_collection_lists(String action, String previous_shelf)
+    {   
+        DefaultListModel<String> prev_shelf_list = manager.getBookCollectionWindow().getListReference(previous_shelf);
+        DefaultListModel<String> list = manager.getBookCollectionWindow().getListReference(collection_selector.getSelectedItem().toString());
+        String name = book_name.getText();
+        prev_shelf_list.removeElement(name);
+        list.addElement(name);
+   
+    }
+    
     private void change_cover_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_change_cover_btnActionPerformed
         img_file_chooser.setVisible(true);
 
+        img_file_chooser.showOpenDialog(BookDetailsPanel);
         book_img_file = new File(img_file_chooser.getSelectedFile().getPath());
         if(book_img_file != null)
         {
@@ -435,4 +463,5 @@ public class SingleBookInfo extends javax.swing.JFrame {
     boolean edits_made;
     private WindowManager manager;
     private byte[] blob_file;
+    private String old_shelf_type;
 }

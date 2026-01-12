@@ -15,6 +15,7 @@ import javax.swing.DefaultListModel;
 
 public class DBOperator {
     // variables are given values using the setter methods 
+    private WindowManager manager;
     Connection user_database;
     int user_id;
     String email;
@@ -34,8 +35,7 @@ public class DBOperator {
     // userbooks
     int page_progress;
     String shelf_type;
-    int book_id;
-    
+    int book_id;    
      
     public String setShelfType(String shelf_name)
     {
@@ -124,6 +124,8 @@ public class DBOperator {
             {
                 // Check if shelf-type is different 
                 System.out.println("Shelf type of ResultSet: " + rs.getString("shelf_type"));
+                // give this shelf_type reference to singlebookinfo
+                manager.getSingleBookWindow().setOldShelfType(rs.getString("shelf_type"));
                 System.out.println("Shelf type of Single Book: " + shelf_type);
                 if(rs.getString("shelf_type").equals(shelf_type))
                 {
@@ -284,9 +286,10 @@ public class DBOperator {
         return full_name;
     }
                 
-    public DBOperator(Connection user_db)
+    public DBOperator(Connection user_db, WindowManager manager)
     {
         user_database = user_db;
+        this.manager = manager;
         pstmt = null; // reused for queries
         rs = null; // reused for queries 
     }

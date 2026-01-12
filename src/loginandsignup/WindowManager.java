@@ -81,6 +81,6 @@ public class WindowManager {
     {
         window_name.setVisible(is_visible);
     }
-            
+                
 }
 

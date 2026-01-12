@@ -33,6 +33,21 @@ public class BookCollection extends javax.swing.JFrame {
         finished_list.setModel(db_operator.getBookNames("Finished"));
     }
     
+    public DefaultListModel<String> getListReference(String shelf_type)
+    {
+        switch(shelf_type)
+        {
+            case "Reading":
+                return (DefaultListModel<String>)reading_list.getModel();
+            case "To-Read":
+                return (DefaultListModel<String>)to_read_list.getModel();
+            case "Finished":
+                return (DefaultListModel<String>)finished_list.getModel();
+        }
+        return null;
+    }
+    
+    
    
     
     /**
@@ -58,7 +73,6 @@ public class BookCollection extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         finished_list = new javax.swing.JList<>();
         search_btn = new javax.swing.JButton();
-        num_finished = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(800, 500));
@@ -107,8 +121,6 @@ public class BookCollection extends javax.swing.JFrame {
         search_btn.setText("Search Book");
         search_btn.addActionListener(this::search_btnActionPerformed);
 
-        num_finished.setText("(10)");
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -142,11 +154,6 @@ public class BookCollection extends javax.swing.JFrame {
                         .addGap(100, 100, 100)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 116, Short.MAX_VALUE))))
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(num_finished)
-                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,11 +181,6 @@ public class BookCollection extends javax.swing.JFrame {
                         .addComponent(jScrollPane4))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(31, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(num_finished)
-                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         getContentPane().add(jPanel2);
@@ -189,6 +191,7 @@ public class BookCollection extends javax.swing.JFrame {
 
     private void finished_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_finished_listMouseClicked
         // TODO add your handling code here:
+        list_mouse_clicked(finished_list);
     }//GEN-LAST:event_finished_listMouseClicked
     
     private void search_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_btnActionPerformed
@@ -202,21 +205,20 @@ public class BookCollection extends javax.swing.JFrame {
     }//GEN-LAST:event_create_book_btnActionPerformed
 
     private void reading_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reading_listMouseClicked
-        // book in curr_reading clicked
-
-        // show details (create SingleBookInfo object)
-        this.setVisible(false);
-        int book_id = db_operator.getBookId(reading_list.getSelectedValue());
-        System.out.println("The book id from the book you clicked is " + book_id);
-        ResultSet details = db_operator.getFullBookDetails(book_id);
-        manager.setSingleBookWindow(new SingleBookInfo(db_operator, details, manager)); // might need unique constraint for name
-
+        list_mouse_clicked(reading_list);
     }//GEN-LAST:event_reading_listMouseClicked
 
     private void to_read_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_to_read_listMouseClicked
         // TODO add your handling code here:
+        list_mouse_clicked(to_read_list);
     }//GEN-LAST:event_to_read_listMouseClicked
 
+    private void list_mouse_clicked(JList list_name)
+    {  
+        int book_id = db_operator.getBookId(list_name.getSelectedValue().toString());
+        ResultSet details = db_operator.getFullBookDetails(book_id);
+        manager.setSingleBookWindow(new SingleBookInfo(db_operator, details, manager));
+    }
     /**
      * @param args the command line arguments
      */
@@ -231,7 +233,6 @@ public class BookCollection extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JLabel num_finished;
     private javax.swing.JLabel num_reading;
     private javax.swing.JLabel num_to_read;
     private javax.swing.JList<String> reading_list;
