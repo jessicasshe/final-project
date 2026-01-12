@@ -1,0 +1,7 @@
+Grid Layouts
+--> Create a panel to store the grid layout on 
+(Pass in the new grid layout by editing JPanel code) 
+
+--> Run a loop to read the bytes of each Image 
+
+--> 
