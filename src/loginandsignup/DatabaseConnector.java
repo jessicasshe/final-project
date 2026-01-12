@@ -6,10 +6,6 @@ package loginandsignup;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.DriverManager;
-/**
- *
- * @author JessicaS
- */
 public class DatabaseConnector {
     String name;
     // pass in the required database to connect to?

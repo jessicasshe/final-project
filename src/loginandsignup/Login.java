@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package loginandsignup;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import loginandsignup.DBOperator;
 
 public class Login extends javax.swing.JFrame {
     
@@ -14,13 +11,17 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
-    public Login() {
+    public Login(WindowManager manager) {
         initComponents();
         System.out.println(System.getProperty("user.dir"));
         DatabaseConnector user_db_connector = new DatabaseConnector("LoginAndSignUp.db");
-        user_db = user_db_connector.connect();
-        db_operator = new UserDBOperator(user_db);  
+        this.setVisible(true);
+        this.pack();
+        this.setLocationRelativeTo(null);
 
+        window_manager = manager;
+        user_db = user_db_connector.connect();
+        db_operator = new DBOperator(user_db, window_manager);  
     }
 
     /**
@@ -34,6 +35,7 @@ public class Login extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         Right = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
         Left = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -46,7 +48,6 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("LOGIN");
-        setPreferredSize(new java.awt.Dimension(800, 500));
 
         jPanel1.setPreferredSize(new java.awt.Dimension(800, 500));
         jPanel1.setLayout(null);
@@ -54,15 +55,24 @@ public class Login extends javax.swing.JFrame {
         Right.setBackground(new java.awt.Color(89, 69, 69));
         Right.setPreferredSize(new java.awt.Dimension(400, 500));
 
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/loginandsignup/AppIcon.png"))); // NOI18N
+        jLabel5.setText("jLabel5");
+
         javax.swing.GroupLayout RightLayout = new javax.swing.GroupLayout(Right);
         Right.setLayout(RightLayout);
         RightLayout.setHorizontalGroup(
             RightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 410, Short.MAX_VALUE)
+            .addGroup(RightLayout.createSequentialGroup()
+                .addGap(52, 52, 52)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(52, Short.MAX_VALUE))
         );
         RightLayout.setVerticalGroup(
             RightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 510, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RightLayout.createSequentialGroup()
+                .addContainerGap(87, Short.MAX_VALUE)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61))
         );
 
         jPanel1.add(Right);
@@ -123,7 +133,7 @@ public class Login extends javax.swing.JFrame {
                         .addGap(29, 29, 29)
                         .addComponent(signup_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(login_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
         LeftLayout.setVerticalGroup(
             LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,11 +154,11 @@ public class Login extends javax.swing.JFrame {
                 .addGroup(LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(signup_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
 
         jPanel1.add(Left);
-        Left.setBounds(400, 0, 400, 500);
+        Left.setBounds(400, -10, 410, 510);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -189,13 +199,15 @@ public class Login extends javax.swing.JFrame {
                 db_operator.setPassword(password_text.getText().trim());
                 
                 int user_id = db_operator.FindExistingUser();
+                db_operator.setUserId(user_id);
                 if(user_id != 0 && user_id != -1)
                 {
                     System.out.println("Login successful!");
-                    BookDetails BookDetailsFrame = new BookDetails(db_operator);
+                    
+                    // go to the home page (pull from main)
+                    window_manager.setBookCollectionWindow(new BookCollection(db_operator, window_manager));
                     this.setVisible(false);
                 }
-                    // go to home screen & create the user object 
                 else
                     System.out.println("Wrong credentials, please try again!");
             }
@@ -203,13 +215,9 @@ public class Login extends javax.swing.JFrame {
 
     private void signup_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signup_btnActionPerformed
         // TODO add your handling code here:
-        Signup SignupFrame = new Signup(this, db_operator); // create a login frame object (panels defined in login class)
-        SignupFrame.setVisible(true);
-        SignupFrame.pack();
-        SignupFrame.setLocationRelativeTo(null);
+        Signup SignupFrame = new Signup(db_operator, window_manager); 
+        window_manager.setSignupWindow(SignupFrame);
         this.setVisible(false); // hides current window 
-
-        
     }//GEN-LAST:event_signup_btnActionPerformed
 
     private void password_textActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_password_textActionPerformed
@@ -230,11 +238,13 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton login_btn;
     private javax.swing.JPasswordField password_text;
     private javax.swing.JButton signup_btn;
     // End of variables declaration//GEN-END:variables
     private Connection user_db;
-    private UserDBOperator db_operator;
+    private DBOperator db_operator;
+    private WindowManager window_manager;
 }

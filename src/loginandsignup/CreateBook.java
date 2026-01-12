@@ -8,25 +8,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.io.File;
 import javax.swing.ImageIcon;
+import loginandsignup.DBOperator;
 
 /**
  *
  * @author JessicaS
  */
-public class BookDetails extends javax.swing.JFrame {
+public class CreateBook extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BookDetails.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CreateBook.class.getName());
 
     /**
      * Creates new form BookDetails
      */
-    public BookDetails(UserDBOperator db_operator) { // neef a reference to db_operator which alr has the connection
+    public CreateBook(DBOperator db_operator, WindowManager manager) { // neef a reference to db_operator which alr has the connection
         this.setVisible(true);
         Statement stmt;
         ResultSet rs;
         initComponents();
         this.db_operator = db_operator;
+        this.manager = manager;
         img_file_chooser.setVisible(false);
+        
 
     }
 
@@ -39,7 +42,7 @@ public class BookDetails extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        popupMenu1 = new java.awt.PopupMenu();
+        img_file_chooser = new javax.swing.JFileChooser();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         book_image = new javax.swing.JLabel();
@@ -49,19 +52,22 @@ public class BookDetails extends javax.swing.JFrame {
         num_of_pages = new javax.swing.JLabel();
         num_pages_text = new javax.swing.JTextField();
         book_author = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
         create_btn = new javax.swing.JButton();
-        img_file_chooser = new javax.swing.JFileChooser();
         upload_file_btn = new javax.swing.JButton();
         book_img = new javax.swing.JLabel();
+        back_btn = new javax.swing.JButton();
 
-        popupMenu1.setLabel("popupMenu1");
-        popupMenu1.addActionListener(this::popupMenu1ActionPerformed);
-        popupMenu1.getAccessibleContext().setAccessibleDescription("");
+        img_file_chooser.setApproveButtonText("");
+        img_file_chooser.setApproveButtonToolTipText("");
+        img_file_chooser.setCurrentDirectory(new java.io.File("/Users/JessicaS/NetBeansProjects/LoginAndSignUp"));
+        img_file_chooser.setDialogTitle("");
+        img_file_chooser.addActionListener(this::img_file_chooserActionPerformed);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(800, 500));
         getContentPane().setLayout(null);
+
+        jPanel1.setPreferredSize(new java.awt.Dimension(800, 500));
 
         jLabel1.setFont(new java.awt.Font("Palatino", 1, 36)); // NOI18N
         jLabel1.setText("CREATE NEW BOOK");
@@ -80,37 +86,31 @@ public class BookDetails extends javax.swing.JFrame {
 
         book_author.setText("Author");
 
-        jTextField4.addActionListener(this::jTextField4ActionPerformed);
-
         create_btn.setText("Create");
         create_btn.addActionListener(this::create_btnActionPerformed);
-
-        img_file_chooser.setApproveButtonText("");
-        img_file_chooser.setApproveButtonToolTipText("");
-        img_file_chooser.setDialogTitle("");
-        img_file_chooser.addActionListener(this::img_file_chooserActionPerformed);
 
         upload_file_btn.setText("Upload File");
         upload_file_btn.addActionListener(this::upload_file_btnActionPerformed);
 
         book_img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/loginandsignup/_.jpeg"))); // NOI18N
 
+        back_btn.setText("Back to Collection");
+        back_btn.addActionListener(this::back_btnActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(71, 71, 71)
+                .addGap(76, 76, 76)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(book_title, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(title_text, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(create_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(book_title, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(39, 39, 39)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(title_text, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(num_pages_text, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(num_of_pages, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(book_author, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -119,11 +119,14 @@ public class BookDetails extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(book_image, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(upload_file_btn))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(18, 18, 18)
                                 .addComponent(book_img, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(394, 394, 394)
-                        .addComponent(img_file_chooser, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(594, 594, Short.MAX_VALUE))
+                        .addContainerGap(135, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(create_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(back_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(108, 108, 108))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -135,41 +138,37 @@ public class BookDetails extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(title_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(img_file_chooser, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(num_of_pages, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(num_pages_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(book_author, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(author_text, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(book_image, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(upload_file_btn))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(book_img, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(1218, 1218, 1218)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(num_of_pages, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(num_pages_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(book_author, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(author_text, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(create_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(book_img, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9)
+                        .addComponent(back_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(book_image, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(upload_file_btn)
+                        .addGap(38, 38, 38)
+                        .addComponent(create_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(6, 0, 778, 507);
+        jPanel1.setBounds(0, 0, 770, 520);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void author_textActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_author_textActionPerformed
         // TODO add your handling code here:
-        
+       
         
     }//GEN-LAST:event_author_textActionPerformed
 
@@ -177,15 +176,13 @@ public class BookDetails extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_num_pages_textActionPerformed
 
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
-
     private void create_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_create_btnActionPerformed
         // TODO add your handling code here:
         db_operator.setTitle(title_text.getText());
         db_operator.setNumPages(num_pages_text.getText());
         db_operator.setAuthor(author_text.getText());
+        db_operator.setNumUsersRead(0);
+        db_operator.setBLOBImageFile(db_operator.convertFiletoByte(img_file));
 
         int book_valid = db_operator.createBook();
         if(book_valid != 0)
@@ -199,10 +196,6 @@ public class BookDetails extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_title_textActionPerformed
 
-    private void popupMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupMenu1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_popupMenu1ActionPerformed
-
     private void img_file_chooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_img_file_chooserActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_img_file_chooserActionPerformed
@@ -213,17 +206,31 @@ public class BookDetails extends javax.swing.JFrame {
         // select the users OWN file directory 
         
         img_file_chooser.setVisible(true);
-        img_file_chooser.showSaveDialog(jPanel1);
-        File img_file = img_file_chooser.getSelectedFile(); // get the file object of users selected file
+        
+        // add approving msg checker later 
+        img_file_chooser.showOpenDialog(jPanel1);
+        System.out.println(img_file_chooser.getSelectedFile().getPath());
+        img_file = img_file_chooser.getSelectedFile();
+// get the file object of users selected file
+        
         book_img.setIcon(new ImageIcon(img_file.getPath()));
         // change image to the selected file
         
+        
+        
     }//GEN-LAST:event_upload_file_btnActionPerformed
+
+    private void back_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back_btnActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        manager.editWindowVisibility(true, manager.getBookCollectionWindow());
+    }//GEN-LAST:event_back_btnActionPerformed
 
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField author_text;
+    private javax.swing.JButton back_btn;
     private javax.swing.JLabel book_author;
     private javax.swing.JLabel book_image;
     private javax.swing.JLabel book_img;
@@ -232,13 +239,13 @@ public class BookDetails extends javax.swing.JFrame {
     private javax.swing.JFileChooser img_file_chooser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JLabel num_of_pages;
     private javax.swing.JTextField num_pages_text;
-    private java.awt.PopupMenu popupMenu1;
     private javax.swing.JTextField title_text;
     private javax.swing.JButton upload_file_btn;
     // End of variables declaration//GEN-END:variables
-    private UserDBOperator db_operator; 
+    private DBOperator db_operator; 
+    private File img_file;
+    private WindowManager manager;
 }
 

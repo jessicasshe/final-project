@@ -9,14 +9,13 @@ public class Signup extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Signup.class.getName());
 
-    /**
-     * Creates new form Signup
-     */
-    public Signup(Login login_frame, UserDBOperator db_operator) {
+    public Signup(DBOperator db_operator, WindowManager manager ) {
         initComponents();
-        this.login_frame = login_frame;
+        this.setVisible(true);
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.manager = manager;
         this.db_operator = db_operator; // change to operator object later 
-        
     }
 
     /**
@@ -202,7 +201,7 @@ public class Signup extends javax.swing.JFrame {
     private void login_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login_btnActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        login_frame.setVisible(true);
+        manager.editWindowVisibility(true, manager.getLoginWindow());
     }//GEN-LAST:event_login_btnActionPerformed
 
     private void name_textActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_name_textActionPerformed
@@ -229,6 +228,6 @@ public class Signup extends javax.swing.JFrame {
     private javax.swing.JPasswordField password_text;
     private javax.swing.JButton signup_btn;
     // End of variables declaration//GEN-END:variables
-    private Login login_frame;
-    private UserDBOperator db_operator;
+    private DBOperator db_operator;
+    private WindowManager manager;
 }
