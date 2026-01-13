@@ -15,3 +15,5 @@ Solution -> Need PREPARED STATEMENTS to handle BLOB data (mandatory)
 ## Problems with a file that wouldn't clean and build
 Solution -> Check for test files, make sure they are named test and not anything else, check project files are in project tab and not file tab, move src file if needed - if this all fails copy code that you need and delete file as it is currupted. Re - clone file with Team - Git - Clone and link to repistory again
 
+## Problem with some Database Query Logic 
+- Need to enforce unique book name & author to check for duplicates in Books table instead of a risky manual method 
