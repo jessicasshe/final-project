@@ -2,6 +2,7 @@ package loginandsignup;
 import javax.swing.JFrame;
 
 
+
 public class WindowManager {
     // has access to all windows to set visible 
     CreateBook create_book_window;
@@ -10,7 +11,39 @@ public class WindowManager {
     BookCollection book_collection_window;
     Login login_window;
     Signup signup_window;
+    String previous_window;
     
+    DatabaseConnector db_connector;
+    DBOperator db_operator;
+    
+    public WindowManager(DatabaseConnector connector, DBOperator db_operator)
+    {
+       db_connector = connector;
+       this.db_operator = db_operator;
+        
+    }
+    
+    public DatabaseConnector getConnector()
+    {
+        return db_connector;
+    }
+    
+    public DBOperator getDBOperator()
+    {
+        return db_operator;
+    }
+    
+    public String setPreviousWindow(String window_name)
+    {
+        previous_window = window_name;
+        return previous_window;
+    }
+    
+    public String getPreviousWindow()
+    {
+        return previous_window;
+    }
+            
     public CreateBook setCreateBookWindow(CreateBook create_book_window)
     {
         this.create_book_window = create_book_window;

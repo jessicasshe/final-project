@@ -179,7 +179,7 @@ public class CreateBook extends javax.swing.JFrame {
     private void create_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_create_btnActionPerformed
         // TODO add your handling code here:
         db_operator.setTitle(title_text.getText());
-        db_operator.setNumPages(num_pages_text.getText());
+        db_operator.setNumPages(Integer.parseInt(num_pages_text.getText())); // add error messages later 
         db_operator.setAuthor(author_text.getText());
         db_operator.setNumUsersRead(0);
         db_operator.setBLOBImageFile(db_operator.convertFiletoByte(img_file));

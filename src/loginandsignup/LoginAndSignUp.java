@@ -7,15 +7,15 @@ import java.sql.DriverManager;
 public class LoginAndSignUp {
     
     public static void main(String[] args) {
-        // TODO code application logic here
-        /*WindowManager window_manager = new WindowManager();
+
+        WindowManager window_manager = new WindowManager(new DatabaseConnector("BookClub.db"), new DBOperator());
+        window_manager.getDBOperator().setManager(window_manager);
         window_manager.setLoginWindow(new Login(window_manager));
-        */
-        // center 
         
+       
         
         // Testing purposes only: 
-        OptionPaneTester layout_tester = new OptionPaneTester();
+        //OptionPaneTester layout_tester = new OptionPaneTester();
         
     }
     

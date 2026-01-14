@@ -14,14 +14,10 @@ public class Login extends javax.swing.JFrame {
     public Login(WindowManager manager) {
         initComponents();
         System.out.println(System.getProperty("user.dir"));
-        DatabaseConnector user_db_connector = new DatabaseConnector("LoginAndSignUp.db");
         this.setVisible(true);
         this.pack();
         this.setLocationRelativeTo(null);
-
         window_manager = manager;
-        user_db = user_db_connector.connect();
-        db_operator = new DBOperator(user_db, window_manager);  
     }
 
     /**
@@ -193,29 +189,33 @@ public class Login extends javax.swing.JFrame {
             {
                 System.out.println("Cannot leave the fields empty, please try again.");
             }
-         else // go to db 
+         else 
             {
-                db_operator.setEmail(email_text.getText().trim());
-                db_operator.setPassword(password_text.getText().trim());
+                System.out.println("No fields are empty");
+                // Create a user object for the database to reference 
                 
-                int user_id = db_operator.FindExistingUser();
-                db_operator.setUserId(user_id);
-                if(user_id != 0 && user_id != -1)
+                window_manager.getDBOperator().setEmail(email_text.getText().trim());
+                window_manager.getDBOperator().setPassword(password_text.getText().trim());
+                
+                if(window_manager.getDBOperator().UserExists())
                 {
                     System.out.println("Login successful!");
-                    
-                    // go to the home page (pull from main)
-                    window_manager.setBookCollectionWindow(new BookCollection(db_operator, window_manager));
+                    window_manager.getDBOperator().LoadExistingUser();
                     this.setVisible(false);
+                    window_manager.setBookCollectionWindow(new BookCollection(window_manager));
                 }
+                
                 else
-                    System.out.println("Wrong credentials, please try again!");
+                {
+  
+                    System.out.println("Wrong credentials!");
+                }
             }
     }//GEN-LAST:event_login_btnActionPerformed
 
     private void signup_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signup_btnActionPerformed
         // TODO add your handling code here:
-        Signup SignupFrame = new Signup(db_operator, window_manager); 
+        Signup SignupFrame = new Signup(window_manager); 
         window_manager.setSignupWindow(SignupFrame);
         this.setVisible(false); // hides current window 
     }//GEN-LAST:event_signup_btnActionPerformed
@@ -245,6 +245,5 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton signup_btn;
     // End of variables declaration//GEN-END:variables
     private Connection user_db;
-    private DBOperator db_operator;
     private WindowManager window_manager;
 }

@@ -9,13 +9,12 @@ public class Signup extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Signup.class.getName());
 
-    public Signup(DBOperator db_operator, WindowManager manager ) {
+    public Signup(WindowManager manager ) {
         initComponents();
         this.setVisible(true);
         this.pack();
         this.setLocationRelativeTo(null);
         this.manager = manager;
-        this.db_operator = db_operator; // change to operator object later 
     }
 
     /**
@@ -169,9 +168,9 @@ public class Signup extends javax.swing.JFrame {
 
     private void signup_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signup_btnActionPerformed
         // TODO add your handling code here:
-        db_operator.setName(name_text.getText().trim());
-        db_operator.setEmail(email_text.getText().trim());
-        db_operator.setPassword(password_text.getText().trim());
+        manager.getDBOperator().setName(name_text.getText().trim());
+        manager.getDBOperator().setEmail(email_text.getText().trim());
+        manager.getDBOperator().setPassword(password_text.getText().trim());
         
         // check if any field is empty 
         if(name_text.getText().isEmpty() || email_text.getText().isEmpty() || password_text.getText().isEmpty())
@@ -181,18 +180,14 @@ public class Signup extends javax.swing.JFrame {
         else
         {
             // check for duplicates
-            int user_id = db_operator.FindExistingUser();
-            if(user_id != 0 && user_id != -1) // valid user found
+            if(manager.getDBOperator().UserExists())
             {
-                System.out.println("This user already exists.");
+                System.out.println("A user with this email already exists.");
             }
-            else if(user_id == 0) // can create a valid user 
+            else
             {
-                user_id = db_operator.CreateNewUser();
-                if(user_id != 0)
-                {
-                    System.out.println("User with user_id" + user_id + " created successfully!");
-                }
+                System.out.println("Eligible to create a new user");
+                manager.getDBOperator().CreateNewUser();
             }
         }
         

@@ -16,28 +16,33 @@ import java.util.ArrayList;
 
 public class DBOperator {
     // variables are given values using the setter methods 
+    
+    
     private WindowManager manager;
-    Connection user_database;
+    // REPLACE THESE WITH A USER OBJECT 
+    private User user;
     int user_id;
     String email;
     String password;
     String full_name; 
+    String user_type;
     
-    PreparedStatement pstmt;
-    ResultSet rs;
-    
-    // Group all of these into one resultset 
     String title;
     String author;
-    String num_pages;
+    int num_pages;
     int num_users_read;
     byte[] blob_file;
     
-    // userbooks
     int page_progress;
     String shelf_type;
     int book_id;    
     
+    public WindowManager setManager(WindowManager manager)
+    {
+        this.manager = manager;
+        return this.manager;
+    }
+
    
      
     public String setShelfType(String shelf_name)
@@ -70,17 +75,33 @@ public class DBOperator {
         return num_users_read;
     }
     
+    public Connection newConnection()
+    {
+      return manager.getConnector().connect();
+    }
+    
+    
+    
     /* 
     Called from the SingleBookInfo window. Updates the column values specifically in Books for a selected book.
     @param: none, used setter methods to edit column values 
-    @return: updated book_id for the book
+    @return: 1 if updated/no conflict, 2 if duplicate exists, -1 if exception raised
     */
     public int updateBooksColumns()
     {
-        try{
-        pstmt = user_database.prepareStatement("UPDATE Books SET book_author = ?, book_name = ? , total_users_read = ?, image = ? , num_pages = ? WHERE book_id = ? ");
-        //pstmt.setString()...
-        return pstmt.executeUpdate();
+        try(Connection conn = newConnection();
+            PreparedStatement pstmt = conn.prepareStatement("UPDATE OR IGNORE Books SET author = ?, book_name = ? , total_users_read = ?, image = ? , num_pages = ? WHERE book_id = ? ")
+            ){
+            
+            pstmt.setString(1, author);
+            pstmt.setString(2, title);
+            pstmt.setInt(3, num_users_read);
+            pstmt.setBytes(4, blob_file);
+            pstmt.setInt(5, num_pages);
+            pstmt.setInt(6, book_id);
+            int value = pstmt.executeUpdate();
+            System.out.println(value);
+            return value; 
         }
         catch(SQLException e)
         {
@@ -89,13 +110,23 @@ public class DBOperator {
         }
         return -1;
     }
-            
+    
+    
+    /*
+    Called from SingleBookWindow. Updates the columns in UsersBooks based on the edits the user made.
+    @ return 1 if updated, 0 if conflict,  -1 if an exception was raised.
+    */        
     public int updateUsersBooksColumns()
     {
-        try
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("UPDATE OR IGNORE UsersBooks SET page_progress = ?, shelf_type = ? WHERE book_id = ?"))
         {
-            pstmt = user_database.prepareStatement("UPDATE UsersBooks SET page_progress = ?, shelf_type = ? WHERE book_id = ?");
-            return pstmt.executeUpdate();
+            
+            pstmt.setInt(1, page_progress);
+            pstmt.setString(2, shelf_type);
+            pstmt.setInt(3, book_id);
+            int updated_val = pstmt.executeUpdate();
+            System.out.println(updated_val);
+            return updated_val; // change later
         }
         catch(SQLException e)
         {
@@ -104,34 +135,38 @@ public class DBOperator {
         }
         return -1;
     }
+    /*
+    Called from SearchBook wundow. 
+    @ param: search type ('Title' or 'Author') based on what the user clicked
+    @ return: an ArrayList with the names of the books that match the search
+    */
     
     public ArrayList<String> getSearchResults(String search_type)
     {
         ArrayList<String> book_names = new ArrayList<>();
-        try
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT book_name FROM Books where "+search_type+" = ?"))
         {
             switch(search_type)
             {   
                 case "Author":
                     System.out.println("Searching by author..");
-                    pstmt = user_database.prepareStatement("SELECT book_name FROM Books where author = ?");
                     pstmt.setString(1,author);
+                    break;
 
                 case "Title":
                     System.out.println("Searching by title...");
-                    pstmt = user_database.prepareStatement("SELECT book_name FROM Books where book_name = ?");
                     pstmt.setString(1, title);
+                    break;
             }
-            rs = pstmt.executeQuery();
-            
-            while(rs.next())
+            try(ResultSet rs = pstmt.executeQuery())
             {
-                book_names.add(rs.getString("book_name"));
+            
+                while(rs.next())
+                {
+                    book_names.add(rs.getString("book_name"));
+                }
+                return book_names;
             }
-            rs.close();
-            pstmt.close();
-
-            return book_names;
         }
         catch(SQLException e)
         {
@@ -141,56 +176,20 @@ public class DBOperator {
         return null;
     }
     
+    /*
+    
+    */
+    
     public int addBookToUserBooks(ResultSet details) // already given the row itself so it isnt necessary to set the attribute variables
     {
-        
-        try{
-            
-            // check for duplication
-            pstmt = user_database.prepareStatement("SELECT * from UsersBooks WHERE book_id = ? AND user_id = ? AND page_progress = ?");
-            //System.out.println("Book id: " + details.getInt("book_id"));
-            pstmt.setInt(1, book_id);
-            
-           // System.out.println("User id: " + details.getInt("user_id"));
-            pstmt.setInt(2, user_id);
-            
-            //System.out.println("Page progress: " + details.getInt("page_progress"));
-            pstmt.setInt(3, page_progress);
-                                                
-            rs = pstmt.executeQuery();
-            
-            if(rs.next())
-            {
-                // Check if shelf-type is different 
-                System.out.println("Shelf type of ResultSet: " + rs.getString("shelf_type"));
-                // give this shelf_type reference to singlebookinfo
-                manager.getSingleBookWindow().setOldShelfType(rs.getString("shelf_type"));
-                System.out.println("Shelf type of Single Book: " + shelf_type);
-                if(rs.getString("shelf_type").equals(shelf_type))
-                {
-                    System.out.println("You already have this book listed!");
-                    return 0;
-
-                }
-                else{
-                    System.out.println("Switching the shelf the book is listed in...");
-                    pstmt = user_database.prepareStatement("UPDATE UsersBooks SET shelf_type = ? ");
-                    pstmt.setString(1, shelf_type);
-                    int id = pstmt.executeUpdate();
-                    return id;
-                }
-            }
-
-            // insertion once valid
-            pstmt = user_database.prepareStatement("INSERT into UsersBooks (user_id, page_progress, shelf_type, book_id) VALUES(?, ?, ?, ?)");
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("INSERT OR IGNORE into UsersBooks (user_id, page_progress, shelf_type, book_id) VALUES(?, ?, ?, ?)"))
+        {
             pstmt.setInt(1, user_id);
             pstmt.setInt(2, page_progress);
             pstmt.setString(3, shelf_type);
             pstmt.setInt(4, book_id);
-            
-            int id = pstmt.executeUpdate();
-            pstmt.close();
-            return id;
+            int value = pstmt.executeUpdate();
+            return value;
         }
         catch(SQLException e)
         {
@@ -201,22 +200,22 @@ public class DBOperator {
     }
 
 
-    public DefaultListModel<String> getBookNames(String shelf_type) // overloaded method 
+    public DefaultListModel<String> getBookNames(String shelf_type) // overloaded method for search on collection list
     {
         DefaultListModel<String> curr_books = new DefaultListModel<>();
         
-        // join Users with UserBooks first 
+        // join Users with UserBooks first, configure for ClubBooks 
         
-        try
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT book_name FROM Books JOIN UsersBooks ON Books.book_id = UsersBooks.book_id WHERE shelf_type = ?"))
         {
-            pstmt = user_database.prepareStatement("SELECT book_name FROM Books JOIN UsersBooks ON Books.book_id = UsersBooks.book_id WHERE UsersBooks.shelf_type = ?");
             pstmt.setString(1, shelf_type);
-            rs = pstmt.executeQuery();
-
-            // only get book_ids from the reading shelf 
-            while(rs.next())
+            try(ResultSet rs = pstmt.executeQuery())
             {
-                curr_books.addElement(rs.getString("book_name"));
+                while(rs.next())
+                {
+                    curr_books.addElement(rs.getString("book_name"));
+
+                }
             }
             return curr_books;
         }
@@ -228,26 +227,26 @@ public class DBOperator {
         return null;
     }
     
-    public DefaultListModel<String> getBookNames() // used for SEARCH books available already
+    public DefaultListModel<String> getBookNames() 
     {
         DefaultListModel<String> book_names = new DefaultListModel<>();        
-        try
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT book_name FROM Books")) 
         { 
-            pstmt = user_database.prepareStatement("SELECT book_name FROM Books"); // change logic later for userbooks
-            rs = pstmt.executeQuery();
-            while(rs.next())
+            try(ResultSet rs = pstmt.executeQuery())
             {
-                System.out.println("Book being added is called: " + rs.getString("book_name"));
-                book_names.addElement(rs.getString("book_name"));           
-            }     
-            return book_names;
+                while(rs.next())
+                {
+                    System.out.println("Book being added is called: " + rs.getString("book_name"));
+                    book_names.addElement(rs.getString("book_name"));           
+                }
+                return book_names;
+            }
         }
         catch(SQLException e)
         {
             System.out.println("Something went wrong when querying from the book database");
             e.printStackTrace();
-        
-        return null;
+            return null;
         }
     }
    
@@ -264,64 +263,68 @@ public class DBOperator {
         }
         return null;   
     }
-    
-    public DefaultListModel<String> getBookNames(SearchBook search_book_window, String search_value) // to know that you're calling it from search book
-    {
-        DefaultListModel<String> book_names = new DefaultListModel<>();        
-        try
-        { 
-            switch(search_value)
-            {
-                case "Author":
-                    System.out.println("Searching by author");
-                    pstmt = user_database.prepareStatement("SELECT book_name FROM Books WHERE author = ?");
-                
-                case "Title":
-                    System.out.println("Searching by title");
-                    pstmt = user_database.prepareStatement("SELECT book_name FROM Books WHERE book_name = ?");
-                
-            }
-            pstmt = user_database.prepareStatement("SELECT book_name FROM Books WHERE "); // change logic later for userbooks
-            rs = pstmt.executeQuery();
-            while(rs.next())
-            {
-                System.out.println("Book being added is called: " + rs.getString("book_name"));
-                book_names.addElement(rs.getString("book_name"));           
-            }     
-            return book_names;
-        }
-        catch(SQLException e)
-        {
-            System.out.println("Something went wrong when querying from the book database");
-            e.printStackTrace();
         
-        return null;
-        }
-    }
-    
     public int getBookId(String name)
     {
-        try
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT book_id from Books WHERE book_name = '"+name+"'"))
         {
-            pstmt = user_database.prepareStatement("SELECT book_id from Books WHERE book_name = '"+name+"'");
-            return pstmt.executeQuery().getInt("book_id");
+            try(ResultSet rs = pstmt.executeQuery())
+            {
+                return rs.getInt("book_id");
+            }
         }
         catch(SQLException e)
         {
             System.out.println("Something went wrong querying for the book_id");
             e.printStackTrace();
         }
-        return -1; //exception
+        return -1; 
     }
     
     
-    public ResultSet getFullBookDetails(int book_id) // for individual book window
+    /*
+    Called from SingleBookInfo to get the full row of a book (Joined with user_id)
+    @ param: book_id of book being viewed
+    @ return: Book with attributes of column values of the resultset of the book 
+    */
+    
+    public Book getFullBookDetails(int book_id) 
     {
-        try
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT * from Books LEFT JOIN UsersBooks ON Books.book_id = UsersBooks.book_id WHERE Books.book_id ="+book_id))
         {
-            // left join (Books table) bc some books might not belong to the user yet
-            pstmt = user_database.prepareStatement("SELECT * from Books LEFT JOIN UsersBooks WHERE Books.book_id ="+book_id+" AND Books.book_id = UsersBooks.book_id");
-            return pstmt.executeQuery(); // returns all book info personal to user & to general book
+            // left join (Books table) because some books might not belong to the user yet      
+            try(ResultSet rs = pstmt.executeQuery())
+            {
+                if(rs.next())
+                {     // printing for debugging purposes 
+
+                    
+                    System.out.println("ResultSet Book Info: ");
+                    System.out.println("Book ID: " + rs.getInt("book_id"));
+                    System.out.println("Book name" + rs.getString("book_name"));
+                    System.out.println("Book author" + rs.getString("book_author"));
+                    System.out.println("Num. pages" + rs.getInt("num_pages"));
+                    System.out.println("Total users read" + rs.getInt("total_users_read"));
+                    if(rs.getBytes("image") != null)
+                    {
+                        System.out.println("A book cover exists!");
+                    }
+                    else
+                    {
+                        System.out.println("No picture available");
+                    }
+                    
+                    Book book = new Book(rs.getInt("book_id"), rs.getString("book_name"), rs.getString("author"), rs.getInt("num_pages"), rs.getInt("total_users_read"), rs.getBytes("image"));
+
+                    
+                    if(rs.getInt("user_id") != 0)  // user has this book
+                    {
+                        System.out.println("User has this book, create new Userbook obj here");
+                    }
+                             
+                    return book;
+                }
+            }
         }
         
         catch(SQLException e)
@@ -332,7 +335,33 @@ public class DBOperator {
         return null;
     }
     
-       
+   /*
+    Called from SingleBookWindow to decide which buttons to display 
+    @ param: book_id
+    @ return: 1 for true, 0 for false, -1 for exception
+    
+    */
+    public int FindBookInUserBooks(int book_id)  
+    {
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT 1 FROM Books INNER JOIN UsersBooks ON Books.book_id = UsersBooks.book_id WHERE Books.book_id = ?"))
+        {
+            pstmt.setInt(1, book_id);
+            try(ResultSet rs = pstmt.executeQuery())
+            {
+                if(rs.next())
+                {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Something went wrong trying to search for a book in UsersBooks");    
+            e.printStackTrace();
+        }
+        return -1;
+    }
     
     public byte[] setBLOBImageFile(byte[] file) // where is this being called? check later
     {
@@ -352,7 +381,7 @@ public class DBOperator {
         return this.author;
     }
     
-    public String setNumPages(String num_pages)
+    public int setNumPages(int num_pages)
     {
         this.num_pages = num_pages;
         return this.num_pages;
@@ -375,109 +404,93 @@ public class DBOperator {
         full_name = name;
         return full_name;
     }
-                
-    public DBOperator(Connection user_db, WindowManager manager)
+                    
+    /*
+    Called in Login and Signup to check if a user already exists. In login, to validate credentials. In signup, to check if the signup is eligible 
+    @ return: True if the user exists, false if user does not 
+    */
+    public boolean UserExists() 
     {
-        user_database = user_db;
-        this.manager = manager;
-        pstmt = null; // reused for queries
-        rs = null; // reused for queries 
-    }
-    
-    // RETURNS: user id 
-    public int FindExistingUser() 
-    {
-            try{
-                pstmt = user_database.prepareStatement("SELECT * from Users where email= ? and password = ?");
+            try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT * from Users where email= ?")){
                 pstmt.setString(1, email);
-                pstmt.setString(2, password);
-                rs = pstmt.executeQuery();
-
-                if(rs.next()) // a row exists -> match found
+                try(ResultSet rs = pstmt.executeQuery()){
+                
+                if(rs.next())
                 {
-                   try{
-                   
-                       user_id = rs.getInt("user_id");
-                       pstmt.close();
-                       rs.close();
-
-                       return user_id; // valid
-                    }
-                    catch(SQLException e)
-                    {
-                        System.out.println("Something went wrong while finding the user");
-                        e.printStackTrace();
-                    }
+                    return true;
                 }
-                else
-                {
-                    System.out.println("No user found!");
-                    pstmt.close();
-                    rs.close();
-                    return 0; // no duplicate 
-                }
+            }
             }
             catch(SQLException e)
             {
                 System.out.println("Something has gone wrong.");
                 e.printStackTrace();
             }
-            
-            try{
-                pstmt.close();
-                rs.close();
-            }
-            catch(SQLException e)
-            {
-                System.out.println("Something went wrong while trying to close");
-            }
-            return -1; // exception
-        }   
+            return false; // unable to create new user
+    }
     
-    public int CreateNewUser() // returns user id of a new user 
+    public User LoadExistingUser()
     {
-        try{
-            pstmt = user_database.prepareStatement(("INSERT into Users (name, email, password) VALUES(?, ?, ?, ?) RETURNING user_id"));
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT * from Users where email = ? and password = ?"))
+        {
+            pstmt.setString(1,email);
+            pstmt.setString(2,password);
+            try(ResultSet rs = pstmt.executeQuery())
+            {
+               rs.next();
+               user = new User(rs.getInt("user_id"), rs.getString("user_type"), rs.getString("email"), rs.getString("password"), rs.getString("name"));
+               return user;
+            }
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Something went wrong when loading the user");
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    
+    /*
+    Called from the Signup Window 
+    @ return: A new User object
+    */
+    public User CreateNewUser() 
+    {
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("INSERT into Users (name, email, password) VALUES(?, ?, ?) RETURNING user_id")) {
             pstmt.setString(1, full_name);
             pstmt.setString(2, email);
             pstmt.setString(3, password);
-            pstmt.executeUpdate();
-            rs = user_database.createStatement().executeQuery("SELECT last_insert_rowid()"); // returns a table with int of one row and one column 
-            rs.next(); // read first row 
-                
-            user_id = rs.getInt("last_insert_rowid()"); // gives actual int value
-            rs.close();
-            pstmt.close();
-            return user_id;
+            // update user type later
+            int update = pstmt.executeUpdate();
+            if(update == 1)
+            {
+                // Successful, create new user object with the row id 
+                try(ResultSet rs = conn.createStatement().executeQuery("SELECT last_insert_rowid()")){
+                    rs.next();
+                    int user_id = rs.getInt("last_insert_rowid()"); // gives actual int value
+                    user = new User(user_id, rs.getString("user_type"), rs.getString("email"), rs.getString("password"), rs.getString("name"));
+                    return user;
+                }
+            }
         }
         catch(SQLException e)
         {
             System.out.println("Something went wrong");
             e.printStackTrace();       
         }
-        
-        try{
-            rs.close();
-            pstmt.close();
-        }
-        catch(SQLException e)
-        {
-            System.out.println("Something went wrong while trying to close");
-        }
-        return 0;
+        return null;
     }
     
     public int createBook()
     {
         // verify if the book alr exists-> UNIQUE in sqlite
-        try{
-            PreparedStatement pstmt = user_database.prepareStatement("INSERT into Books (book_name, author, num_pages, image) VALUES(?, ?, ?, ?)");
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("INSERT into Books (book_name, author, num_pages, image) VALUES(?, ?, ?, ?)")){
             pstmt.setBytes(4, blob_file);
             pstmt.setString(1, title);
             pstmt.setString(2, author);
-            pstmt.setString(3, num_pages);
+            pstmt.setInt(3, num_pages);
  
-            
             // call helper function to turn img file into BLOB
             System.out.println("Length of byte: " + blob_file.length);
             pstmt.executeUpdate();
@@ -491,6 +504,7 @@ public class DBOperator {
         return 0; // error showed up 
     }
     
+    // Why is this in DB operator? Add to SingleBookWindow
    public byte[] convertFiletoByte(File file) // returns the byte contents 
    {
        try{
