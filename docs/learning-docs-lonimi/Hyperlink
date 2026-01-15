@@ -1,0 +1,4 @@
+This is how i finally managed to get my hyperlink to work in my popup screen: https://stackoverflow.com/questions/8348063/clickable-links-in-joptionpane#:~:text=bold%22%20:%20%22normal%22),showMessageDialog(null%2C%20ep);%20%7D
+
+- make sure all imports are added to code
+- make a seperate obj
