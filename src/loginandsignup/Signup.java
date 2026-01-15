@@ -9,14 +9,12 @@ public class Signup extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Signup.class.getName());
 
-    /**
-     * Creates new form Signup
-     */
-    public Signup(Login login_frame, UserDBOperator db_operator) {
+    public Signup(WindowManager manager ) {
         initComponents();
-        this.login_frame = login_frame;
-        this.db_operator = db_operator; // change to operator object later 
-        
+        this.setVisible(true);
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.manager = manager;
     }
 
     /**
@@ -170,9 +168,9 @@ public class Signup extends javax.swing.JFrame {
 
     private void signup_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signup_btnActionPerformed
         // TODO add your handling code here:
-        db_operator.setName(name_text.getText().trim());
-        db_operator.setEmail(email_text.getText().trim());
-        db_operator.setPassword(password_text.getText().trim());
+        manager.getDBOperator().setName(name_text.getText().trim());
+        manager.getDBOperator().setEmail(email_text.getText().trim());
+        manager.getDBOperator().setPassword(password_text.getText().trim());
         
         // check if any field is empty 
         if(name_text.getText().isEmpty() || email_text.getText().isEmpty() || password_text.getText().isEmpty())
@@ -182,18 +180,14 @@ public class Signup extends javax.swing.JFrame {
         else
         {
             // check for duplicates
-            int user_id = db_operator.FindExistingUser();
-            if(user_id != 0 && user_id != -1) // valid user found
+            if(manager.getDBOperator().UserExists())
             {
-                System.out.println("This user already exists.");
+                System.out.println("A user with this email already exists.");
             }
-            else if(user_id == 0) // can create a valid user 
+            else
             {
-                user_id = db_operator.CreateNewUser();
-                if(user_id != 0)
-                {
-                    System.out.println("User with user_id" + user_id + " created successfully!");
-                }
+                System.out.println("Eligible to create a new user");
+                manager.getDBOperator().CreateNewUser();
             }
         }
         
@@ -202,7 +196,7 @@ public class Signup extends javax.swing.JFrame {
     private void login_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login_btnActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        login_frame.setVisible(true);
+        manager.editWindowVisibility(true, manager.getLoginWindow());
     }//GEN-LAST:event_login_btnActionPerformed
 
     private void name_textActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_name_textActionPerformed
@@ -229,6 +223,6 @@ public class Signup extends javax.swing.JFrame {
     private javax.swing.JPasswordField password_text;
     private javax.swing.JButton signup_btn;
     // End of variables declaration//GEN-END:variables
-    private Login login_frame;
-    private UserDBOperator db_operator;
+    private DBOperator db_operator;
+    private WindowManager manager;
 }
