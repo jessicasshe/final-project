@@ -112,7 +112,7 @@ public class Announcements extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         //MEETING LINK
-        JOptionPane.showMessageDialog(this,"httpj//:","MEETING LINK",JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(this,"<html><a href=\"https://www.youtube.com/\">a link</a><html>","MEETING LINK",JOptionPane.PLAIN_MESSAGE);
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
