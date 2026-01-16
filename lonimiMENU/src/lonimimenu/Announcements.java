@@ -5,6 +5,12 @@
 package lonimimenu;
 import javax.swing.JOptionPane;
 import java.awt.Dialog;
+import java.awt.Desktop;
+import java.net.URI;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.JEditorPane;
+import java.io.*;
 
 /**
  *
@@ -19,8 +25,28 @@ public class Announcements extends javax.swing.JFrame {
      */
     public Announcements() {
         initComponents();
+        //roleCheck();
+        loadText();
     }
-
+    
+    /**private void roleCheck(){
+        jButton2.setVisible(user.isAdmin);
+    }*/
+    
+    private void saveText(){
+    try (FileWriter file = new FileWriter("announcements.txt")){
+        file.write(TextBox.getText());
+    } catch (IOException e){
+        //e.printStackTrace();
+    }
+}
+    private void loadText(){
+        try(BufferedReader buff = new BufferedReader(new FileReader("announcements.txt"))){
+            TextBox.read(buff, null);
+        } catch (IOException e){
+            //e.printStackTrace();
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -112,22 +138,39 @@ public class Announcements extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         //MEETING LINK
-        JOptionPane.showMessageDialog(this,"<html><a href=\"https://www.youtube.com/\">a link</a><html>","MEETING LINK",JOptionPane.PLAIN_MESSAGE);
+        JEditorPane editorPane = new JEditorPane();
+        editorPane.setContentType("text/html");
+        editorPane.setEditable(false);
+        editorPane.setText("<html>"+"<a href='https://us06web.zoom.us/j/86207286544?pwd=gb8aNdg1dwlkGBuLaAnEDCWd14lmZE.1'>Join Meeting</a>"+"</html>");
+        
+        editorPane.addHyperlinkListener(new HyperlinkListener(){
+            public void hyperlinkUpdate(HyperlinkEvent e){
+                if (e.getEventType()==HyperlinkEvent.EventType.ACTIVATED){
+                    try{
+                        Desktop.getDesktop().browse(new URI(e.getURL().toString()));
+                    } catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+        JOptionPane.showMessageDialog(this,editorPane,"MEETING LINK",JOptionPane.PLAIN_MESSAGE);
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         //EDIT BUTTON
-        //TextBox.setEditable(true);
-        TextBox.isEditable();
+        TextBox.setEditable(true);
+        //TextBox.isEditable();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         //BACK BUTTON
+        saveText();
         new Menu().setVisible(true);
-        this.dispose();
+        this.setVisible(false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
