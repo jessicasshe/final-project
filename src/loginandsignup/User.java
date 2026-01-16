@@ -17,48 +17,48 @@ public class User {
         password = pass;
     }
     
-    private String getEmail()
+    public String getEmail()
     {
         return email;
         
     }
             
-    private String getPassword()
+    public String getPassword()
     {
         return password;
     }
             
             
-    private String setPassword(String pass)
+    public String setPassword(String pass)
     {
         password = pass;
         return password;
     }
             
             
-    private String setEmail(String email)
+    public String setEmail(String email)
     {
         this.email = email;
         return this.email;
     }
     
-    private int getUserId()
+    public int getUserId()
     {
         return user_id;
     }
     
-    private String getUserType()
+    public String getUserType()
     {
         return user_type;
     }
     
-    private int setUserId(int id)
+    public int setUserId(int id)
     {
         user_id = id;
         return user_id;
     }
             
-    private String setUserType(String type)
+    public String setUserType(String type)
     {
         user_type = type;
         return user_type;

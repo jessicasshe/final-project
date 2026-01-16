@@ -22,8 +22,8 @@ public class DBOperator {
     // REPLACE THESE WITH A USER OBJECT 
     private User user;
     int user_id;
-    String email;
-    String password;
+    String email = "jshe1@ocdsb.ca";
+    String password = "123";
     String full_name; 
     String user_type;
     
@@ -42,7 +42,16 @@ public class DBOperator {
         this.manager = manager;
         return this.manager;
     }
-
+    
+    public User getUser()
+    {
+        return user;
+    }
+    
+    public User setUser(User user){
+        this.user = user;
+        return this.user;
+    }
    
      
     public String setShelfType(String shelf_name)
@@ -80,6 +89,76 @@ public class DBOperator {
       return manager.getConnector().connect();
     }
     
+    /*
+    Returns an ArrayList of note objects for a users given book
+    */
+    /*
+    public ArrayList<Note> getAllBookNotes(Book book)
+    {
+        // get resultset of all notes with user id, book id
+    
+        
+    }
+    
+    
+    /*
+    Called from the ReadingNotes window to add a new note to the databaase
+    @ param: local note object to get attribute values
+    @ return: 1 for success, 0 else, -1 exception
+    */
+    public int addNewNote(Note note)
+    {
+        try(Connection conn = newConnection(); 
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO ReadingNotes (user_id, book_id, last_edited_date, chapter, text) VALUES(?, ?, ?, ?, ?) ON CONFLICT(user_id, book_id, chapter) DO NOTHING"))
+        {
+            pstmt.setInt(1, user.getUserId());
+            pstmt.setInt(2, note.getBook().getBookId());
+            pstmt.setString(3, note.getLastEditedDate());
+            pstmt.setInt(4, note.getChapterNum());
+            pstmt.setString(5, note.getText());
+            
+            int val = pstmt.executeUpdate();
+            if(val == 1)
+            {
+                return val;
+            }
+            return 0;
+                   
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Something went wrong when creating a new note...");
+            e.printStackTrace();
+        }
+        return -1;
+    }
+    
+    public int saveNote(Note note)
+    {
+        try(Connection conn = newConnection();
+            PreparedStatement pstmt = conn.prepareStatement("UPDATE ReadingNotes SET last_edited_date = ?, text = ? WHERE user_id = ? AND  book_id = ? AND  chapter = ? "))
+        {
+            pstmt.setString(1, note.getLastEditedDate());
+            pstmt.setString(2, note.getText());
+            pstmt.setInt(3, user.getUserId());
+            pstmt.setInt(4, note.getBook().getBookId());
+
+            pstmt.setInt(5, note.getChapterNum());
+            int val = pstmt.executeUpdate();
+            if(val == 1)
+            {
+                return val;
+            }
+            return 0;
+            
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Something went wrong while saving note");
+            e.printStackTrace();
+        }
+        return -1;
+    }
     
     
     /* 
@@ -290,7 +369,8 @@ public class DBOperator {
     
     public Book getFullBookDetails(int book_id) 
     {
-        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT * from Books LEFT JOIN UsersBooks ON Books.book_id = UsersBooks.book_id WHERE Books.book_id ="+book_id))
+        // split the method into 2: one to check if book exists (use in createbook) then one to create the object
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT * from Books WHERE Books.book_id ="+book_id))
         {
             // left join (Books table) because some books might not belong to the user yet      
             try(ResultSet rs = pstmt.executeQuery())
@@ -298,11 +378,10 @@ public class DBOperator {
                 if(rs.next())
                 {     // printing for debugging purposes 
 
-                    
                     System.out.println("ResultSet Book Info: ");
                     System.out.println("Book ID: " + rs.getInt("book_id"));
                     System.out.println("Book name" + rs.getString("book_name"));
-                    System.out.println("Book author" + rs.getString("book_author"));
+                    System.out.println("Book author" + rs.getString("author"));
                     System.out.println("Num. pages" + rs.getInt("num_pages"));
                     System.out.println("Total users read" + rs.getInt("total_users_read"));
                     if(rs.getBytes("image") != null)
@@ -315,13 +394,6 @@ public class DBOperator {
                     }
                     
                     Book book = new Book(rs.getInt("book_id"), rs.getString("book_name"), rs.getString("author"), rs.getInt("num_pages"), rs.getInt("total_users_read"), rs.getBytes("image"));
-
-                    
-                    if(rs.getInt("user_id") != 0)  // user has this book
-                    {
-                        System.out.println("User has this book, create new Userbook obj here");
-                    }
-                             
                     return book;
                 }
             }
@@ -335,13 +407,51 @@ public class DBOperator {
         return null;
     }
     
+    public UserBook getUsersBooksDetails(int book_id)
+    {
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT * from UsersBooks INNER JOIN Books ON Books.book_id = UsersBooks.book_id WHERE Books.book_id ="+book_id))
+        {
+            // left join (Books table) because some books might not belong to the user yet      
+            try(ResultSet rs = pstmt.executeQuery())
+            {
+                if(rs.next())
+                {     // printing for debugging purposes 
+
+                    
+                    System.out.println("ResultSet UserBook Info: ");
+                    System.out.println("Page progress " + rs.getInt("page_progress"));
+                    System.out.println("Shelf type" + rs.getString("shelf_type"));
+                    if(rs.getBytes("image") != null)
+                    {
+                        System.out.println("A book cover exists!");
+                    }
+                    else
+                    {
+                        System.out.println("No picture available");
+                    }
+                    
+                    UserBook user_book = new UserBook(user, rs.getInt("book_id"), rs.getString("book_name"), rs.getString("author"), rs.getInt("num_pages"), rs.getInt("total_users_read"), rs.getBytes("image"));
+
+                    return user_book;
+                }
+            }
+        }
+       
+        catch(SQLException e)
+        {
+            System.out.println("Something went wrong while trying to get the full book details");
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
    /*
     Called from SingleBookWindow to decide which buttons to display 
     @ param: book_id
-    @ return: 1 for true, 0 for false, -1 for exception
+    @ return: true if book exists, else false 
     
     */
-    public int FindBookInUserBooks(int book_id)  
+    public boolean ExistsInUsersBooks(int book_id)  
     {
         try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT 1 FROM Books INNER JOIN UsersBooks ON Books.book_id = UsersBooks.book_id WHERE Books.book_id = ?"))
         {
@@ -350,17 +460,18 @@ public class DBOperator {
             {
                 if(rs.next())
                 {
-                    return 1;
+                    return true;
                 }
             }
-            return 0;
         }
         catch(SQLException e)
         {
             System.out.println("Something went wrong trying to search for a book in UsersBooks");    
+            
             e.printStackTrace();
         }
-        return -1;
+        return false;
+
     }
     
     public byte[] setBLOBImageFile(byte[] file) // where is this being called? check later
@@ -482,10 +593,12 @@ public class DBOperator {
         return null;
     }
     
+    
+    
     public int createBook()
     {
         // verify if the book alr exists-> UNIQUE in sqlite
-        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("INSERT into Books (book_name, author, num_pages, image) VALUES(?, ?, ?, ?)")){
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("INSERT or IGNORE into Books (book_name, author, num_pages, image) VALUES(?, ?, ?, ?)")){
             pstmt.setBytes(4, blob_file);
             pstmt.setString(1, title);
             pstmt.setString(2, author);
@@ -493,7 +606,11 @@ public class DBOperator {
  
             // call helper function to turn img file into BLOB
             System.out.println("Length of byte: " + blob_file.length);
-            pstmt.executeUpdate();
+            int val = pstmt.executeUpdate();
+            if(val == 1) // book added successfully
+            {
+               
+            }
             return 1; // book added successfully 
         }
         catch(SQLException e)

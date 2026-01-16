@@ -6,10 +6,6 @@ import loginandsignup.DBOperator;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
-/**
- *
- * @author JessicaS
- */
 public class BookCollection extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BookCollection.class.getName());
@@ -78,15 +74,23 @@ public class BookCollection extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(800, 500));
         getContentPane().setLayout(null);
 
+        jPanel2.setBackground(new java.awt.Color(158, 118, 118));
+
+        jLabel1.setBackground(new java.awt.Color(255, 248, 234));
         jLabel1.setFont(new java.awt.Font("Palatino", 1, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Books Collection");
 
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Reading");
 
+        to_read_label.setForeground(new java.awt.Color(255, 255, 255));
         to_read_label.setText("To-Read");
 
+        num_reading.setForeground(new java.awt.Color(255, 255, 255));
         num_reading.setText("(2)");
 
+        num_to_read.setForeground(new java.awt.Color(255, 255, 255));
         num_to_read.setText("(7)");
 
         to_read_list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -108,6 +112,7 @@ public class BookCollection extends javax.swing.JFrame {
         create_book_btn.setText("Add New Book");
         create_book_btn.addActionListener(this::create_book_btnActionPerformed);
 
+        finished_label.setForeground(new java.awt.Color(255, 255, 255));
         finished_label.setText("Finished (12)");
 
         finished_list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -175,11 +180,10 @@ public class BookCollection extends javax.swing.JFrame {
                     .addComponent(num_to_read)
                     .addComponent(finished_label))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                        .addComponent(jScrollPane4))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4)
+                    .addComponent(jScrollPane1))
                 .addContainerGap(31, Short.MAX_VALUE))
         );
 
@@ -216,9 +220,12 @@ public class BookCollection extends javax.swing.JFrame {
     private void list_mouse_clicked(JList list_name)
     {  
         int book_id = manager.getDBOperator().getBookId(list_name.getSelectedValue().toString());
-        Book book = manager.getDBOperator().getFullBookDetails(book_id); // saved before the resultset was closed
-        manager.setPreviousWindow("BookCollection");
-        manager.setSingleBookWindow(new SingleBookInfo(book, manager));
+        Book book = manager.getDBOperator().getFullBookDetails(book_id);
+        
+// saved before the resultset was closed
+      //  UserBook user_book = new UserBook(manager.getDBOperator().getUser(), book.getBookId(), )
+       // manager.setPreviousWindow("BookCollection");
+        //manager.setSingleBookWindow(new SingleBookInfo(book, manager));
     }
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
