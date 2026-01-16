@@ -1,0 +1,7 @@
+Ordering in SQLLite:
+
+https://www.sqlitetutorial.net/sqlite-order-by/
+
+
+ORDER BY column_name by ASC, column_name2 by DSC
+Use semi-colon after specifying order type
