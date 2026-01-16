@@ -17,3 +17,7 @@ Solution -> Check for test files, make sure they are named test and not anything
 
 ## Problem with some Database Query Logic 
 - Need to enforce unique book name & author to check for duplicates in Books table instead of a risky manual method 
+
+## Problem with passing ResultSet of databases into windows
+- After implementing try-with-resources to close the ResultSet and the Statement used for the request, the other windows couldnt reference the ResultSet any longer.
+- > Solution: Created a class to represent the rows for a result set  & set the attributes as the column types 
