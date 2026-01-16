@@ -24,10 +24,6 @@ public class SingleNote extends javax.swing.JFrame {
         title.setText(note.getBook().getName());
         chapter_num.setText(String.valueOf(note.getChapterNum()));
         date_label.setText(note.getLastEditedDate());
-        if(text_field.getText().isEmpty())
-        {
-            text_field.setText("Enter your reading notes here");
-        }
     }
     
     @SuppressWarnings("unchecked")
@@ -37,7 +33,6 @@ public class SingleNote extends javax.swing.JFrame {
         option_pane = new javax.swing.JOptionPane();
         jPanel1 = new javax.swing.JPanel();
         title = new javax.swing.JLabel();
-        text_field = new javax.swing.JTextField();
         edit_details_btn = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         chapter_num = new javax.swing.JLabel();
@@ -46,6 +41,8 @@ public class SingleNote extends javax.swing.JFrame {
         save_btn = new javax.swing.JButton();
         delete_btn = new javax.swing.JButton();
         date_label = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        text_area = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -55,9 +52,6 @@ public class SingleNote extends javax.swing.JFrame {
         title.setFont(new java.awt.Font("Helvetica Neue", 1, 36)); // NOI18N
         title.setForeground(new java.awt.Color(255, 255, 255));
         title.setText("Insert Book Title");
-
-        text_field.setText("The note text goes here for the chapter...");
-        text_field.addActionListener(this::text_fieldActionPerformed);
 
         edit_details_btn.setText("Edit Details");
         edit_details_btn.addActionListener(this::edit_details_btnActionPerformed);
@@ -87,6 +81,10 @@ public class SingleNote extends javax.swing.JFrame {
         date_label.setForeground(new java.awt.Color(255, 255, 255));
         date_label.setText("jLabel5");
 
+        text_area.setColumns(20);
+        text_area.setRows(5);
+        jScrollPane1.setViewportView(text_area);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -100,7 +98,7 @@ public class SingleNote extends javax.swing.JFrame {
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(date_label)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 346, Short.MAX_VALUE)
                         .addComponent(edit_details_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -111,16 +109,17 @@ public class SingleNote extends javax.swing.JFrame {
                                 .addComponent(chapter_num, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(100, 100, 100)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(back_btn)
-                                        .addGap(300, 300, 300)
-                                        .addComponent(save_btn)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(delete_btn))
-                                    .addComponent(text_field, javax.swing.GroupLayout.PREFERRED_SIZE, 603, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(back_btn)
+                                .addGap(300, 300, 300)
+                                .addComponent(save_btn)
+                                .addGap(18, 18, 18)
+                                .addComponent(delete_btn)))
+                        .addGap(0, 462, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(100, 100, 100)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,8 +136,8 @@ public class SingleNote extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(chapter_num))
                 .addGap(11, 11, 11)
-                .addComponent(text_field, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(save_btn)
                     .addComponent(delete_btn)
@@ -150,7 +149,7 @@ public class SingleNote extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 804, Short.MAX_VALUE)
+            .addGap(0, 1143, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -170,12 +169,6 @@ public class SingleNote extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    // enter pressed 
-    private void text_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_text_fieldActionPerformed
-        // TODO add your handling code here:
-        validator.setChangesMade(true);
-    }//GEN-LAST:event_text_fieldActionPerformed
-
     private void edit_details_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_details_btnActionPerformed
         // update the existing note row 
         String input = manager.showInputMessage(option_pane, "Enter the new date (YYYY-MM-DD: ");
@@ -192,7 +185,12 @@ public class SingleNote extends javax.swing.JFrame {
     }//GEN-LAST:event_delete_btnActionPerformed
 
     private void save_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_save_btnActionPerformed
-        // check if changes were made 
+        // check if changes were made in the text field
+        if(!original_text.equals(text_area.getText()))
+        {
+            validator.setChangesMade(true);
+        }
+       
         if(validator.getChangesMade())
         {
             int result = manager.showConfirmMessage(option_pane, "Do you want to save your changes?");
@@ -201,7 +199,6 @@ public class SingleNote extends javax.swing.JFrame {
                 System.out.println("Saving changes");
                 
                 // get most recent text field 
-                note.setText(text_field.getText());
                 
                 if(manager.getDBOperator().saveNote(note) ==1)
                 {
@@ -228,9 +225,10 @@ public class SingleNote extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JOptionPane option_pane;
     private javax.swing.JButton save_btn;
-    private javax.swing.JTextField text_field;
+    private javax.swing.JTextArea text_area;
     private javax.swing.JLabel title;
     // End of variables declaration//GEN-END:variables
     private WindowManager manager;

@@ -161,6 +161,50 @@ public class DBOperator {
     }
     
     
+    /* Called from ReadingNotes Window
+    Queries the Notes database using the user and Book id to get a resultset of all the row objects sorted by chapter 
+    Loop through the resultset to get the collection of notes 
+    @ param : Book 
+    @ return : ArrayList of Note objects
+    
+    
+    */
+    
+    public ArrayList<Note> getNotes(Book book, String sort_type)
+    {
+        ArrayList<Note> notes = new ArrayList<>();
+        try(Connection conn = newConnection();
+                PreparedStatement pstmt = conn.prepareStatement("SELECT * from ReadingNotes WHERE book_id = ? AND user_id = ? ORDER BY chapter "+ sort_type))
+            
+            {
+                pstmt.setInt(1, book.getBookId());
+                pstmt.setInt(2, user.getUserId());
+                try(ResultSet rs = pstmt.executeQuery())
+                {
+                    while(rs.next())
+                    {
+                        notes.add(new Note(user, book, rs.getString("last_edited_date"), rs.getInt("chapter"), rs.getString("text")));
+                    }
+                    return notes;
+
+                }
+                
+            }
+       catch(SQLException e)
+       {
+           System.out.println("Something went wrong while searching for existing notes...");
+           e.printStackTrace();
+       }
+        return null;
+    }
+    
+    
+   /* public DefaultListModel<String> getChapterList() 
+    {
+        
+    }
+    */
+    
     /* 
     Called from the SingleBookInfo window. Updates the column values specifically in Books for a selected book.
     @param: none, used setter methods to edit column values 
