@@ -7,7 +7,13 @@ videos used: https://www.youtube.com/watch?v=qtFohSvMPak , https://www.youtube.c
 **Making a streak**
 https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html   - api tutorial
 use this for keeping the date for the streak: https://docs.oracle.com/javase/tutorial/datetime/index.html?utm_
+  - oracle or netbeans site are good for learning how to use different gui features
+  - make sure to browse
 timer class: https://youtu.be/LRzf2JChudM?si=865r3pVi4qvb_02B , https://www.youtube.com/watch?v=HR8rr73GrgY (changed my mind about adding a timer)
+  - best to allow the user to close the popup in their own time than to figure how to time one.
 
 DATE CLASS: https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html?utm
+  - learnt that you can use the predefined dates that come with java to keep track of things
+  - optimal for streak
+    - so we know whether or not the streak has been broken
 
