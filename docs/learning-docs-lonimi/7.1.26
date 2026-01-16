@@ -1,4 +1,5 @@
 Learnt how to make different elements or pages within my app visible.
 - Using .setVisible(true); and this.dispose(); to close a privious page.
+    - new info: best to use .setVisible(false/true) is planning to come back to another (not super important but it can affect certain situations)
 - Different method for any button labled exit as it needs to close down the application completly. This is done using System.exit(0);, line of code is not necessary new but i needed
   know when to use it or not
