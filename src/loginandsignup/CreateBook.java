@@ -67,23 +67,29 @@ public class CreateBook extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(800, 500));
         getContentPane().setLayout(null);
 
+        jPanel1.setBackground(new java.awt.Color(158, 118, 118));
         jPanel1.setPreferredSize(new java.awt.Dimension(800, 500));
 
         jLabel1.setFont(new java.awt.Font("Palatino", 1, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("CREATE NEW BOOK");
 
+        book_image.setForeground(new java.awt.Color(255, 255, 255));
         book_image.setText("Image FIle");
 
         author_text.addActionListener(this::author_textActionPerformed);
 
+        book_title.setForeground(new java.awt.Color(255, 255, 255));
         book_title.setText("Title");
 
         title_text.addActionListener(this::title_textActionPerformed);
 
+        num_of_pages.setForeground(new java.awt.Color(255, 255, 255));
         num_of_pages.setText("Number of Pages");
 
         num_pages_text.addActionListener(this::num_pages_textActionPerformed);
 
+        book_author.setForeground(new java.awt.Color(255, 255, 255));
         book_author.setText("Author");
 
         create_btn.setText("Create");

@@ -9,7 +9,7 @@ Relationships to User: User HAS A UserBook , or UserBook HAS A User (Can't exist
 public class UserBook extends Book {
     private User user; // access user_id
     private int page_progress;
-    private String shelf_type; // have shelf type in Books, initialize to null?
+    private String shelf_type; 
     
     public UserBook(User user, int book_id, String name, String author, int num_pages, int total_users_read, byte[] image_file)// UserBook belongs to a user & needs a reference
     {
