@@ -1,0 +1,4 @@
+Learned about InputDialogs for JOptionPanes with dropdown selection for adding a new book to a User's collection
+https://docs.oracle.com/javase/8/docs/api/javax/swing/JOptionPane.html
+
+--> Create a array of String objects and pass it in as 'options' parameter for an input dialog 
