@@ -1,0 +1,4 @@
+- Getting the date & time in SQLite query 
+https://www.sqlitetutorial.net/sqlite-date/
+--> DATETIME('now', 'localtime') for local time
+--> DATETIME('now') to get the UTC date and time value 
