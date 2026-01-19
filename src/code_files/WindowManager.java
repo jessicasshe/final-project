@@ -17,7 +17,7 @@ public class WindowManager {
     String previous_window;
     DatabaseConnector db_connector;
     DBOperator db_operator;
-    Announcements announcement_window;
+    AnnouncementsPage announcement_window;
     Menu main_menu_window;
     BookListMenu book_list_menu_window;
     
@@ -30,7 +30,7 @@ public class WindowManager {
         
     }
     
-    public Announcements getAnnouncementsWindow()
+    public AnnouncementsPage getAnnouncementsWindow()
     {
         return announcement_window;
     }
@@ -45,7 +45,7 @@ public class WindowManager {
         return book_list_menu_window;
     }
     
-    public Announcements setAnnouncementsWindow(Announcements window)
+    public AnnouncementsPage setAnnouncementsWindow(AnnouncementsPage window)
     {
         announcement_window = window;
         return announcement_window;
@@ -199,11 +199,6 @@ public class WindowManager {
     {
         return signup_window;
     }
-    
-    public void editWindowVisibility(boolean is_visible, JFrame window_name)
-    {
-        window_name.setVisible(is_visible);
-    }
-                
+   
 }
 

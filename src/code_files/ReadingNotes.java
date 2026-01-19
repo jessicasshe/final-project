@@ -40,12 +40,14 @@ public class ReadingNotes extends javax.swing.JFrame {
         sort_combo_box = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         reset_search_btn = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         chapter_input.setToolTipText("");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(158, 118, 118));
+        jPanel1.setPreferredSize(new java.awt.Dimension(800, 500));
 
         reading_notes_label.setFont(new java.awt.Font("Helvetica Neue", 1, 36)); // NOI18N
         reading_notes_label.setForeground(new java.awt.Color(242, 242, 242));
@@ -78,6 +80,9 @@ public class ReadingNotes extends javax.swing.JFrame {
         reset_search_btn.setText("Reset Search");
         reset_search_btn.addActionListener(this::reset_search_btnActionPerformed);
 
+        jButton1.setText("Back to Book");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -91,29 +96,34 @@ public class ReadingNotes extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(sort_combo_box, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(search_note_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(188, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(38, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(reading_notes_label, javax.swing.GroupLayout.PREFERRED_SIZE, 678, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(84, 84, 84))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(search_note_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(50, 50, 50)
                         .addComponent(new_note_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(183, 183, 183))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(reset_search_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(338, 338, 338))))
+                        .addGap(334, 334, 334))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(reading_notes_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(38, 38, 38))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(reading_notes_label, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(reading_notes_label, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(24, 24, 24)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(new_note_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(search_note_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -122,11 +132,11 @@ public class ReadingNotes extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(sort_combo_box, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(reset_search_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -137,7 +147,7 @@ public class ReadingNotes extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
         );
 
         pack();
@@ -146,11 +156,11 @@ public class ReadingNotes extends javax.swing.JFrame {
     /* Returns a model of ALL chapter notes for this book. 
     
     */
-    private DefaultListModel<String> configureListModel()
+    public DefaultListModel<String> configureListModel()
     {
-        
+        chapters.clear();
         // get a collection of note objects for the users book
-        chapters_array_list = manager.getDBOperator().getNotes(book);
+        chapters_array_list = manager.getDBOperator().getNotes(book); // always reinstantiated for latest update 
 
         for(Note note : chapters_array_list)
         {
@@ -159,7 +169,7 @@ public class ReadingNotes extends javax.swing.JFrame {
         return chapters;     
     }
     
-    private DefaultListModel<String> configureListModel(ArrayList<Integer> specific_chapters)
+    public DefaultListModel<String> configureListModel(ArrayList<Integer> specific_chapters)
     {
         
         // get a collection of note objects for the users book
@@ -182,6 +192,11 @@ public class ReadingNotes extends javax.swing.JFrame {
         chapters.clear();
         chapters.addElement(Integer.toString(chapter_num));
         chapter_note_list.setModel((DefaultListModel<String>)chapters);
+    }
+    
+    public ArrayList<Note> getNotes()
+    {
+        return chapters_array_list;
     }
 
             
@@ -222,11 +237,11 @@ public class ReadingNotes extends javax.swing.JFrame {
         String chapter_entered = manager.showInputMessage(chapter_input, "Enter the chapter number:");
         if(!validator.isEmpty(chapter_entered) && validator.isNumeric(chapter_entered))
         {            
-            Note note = new Note(manager.getDBOperator().getUser(), book, "January 15 2025", Integer.parseInt(chapter_entered), "null");
+            Note note = new Note(manager.getDBOperator().getUser(), book, "YYYY/MM/DD", Integer.parseInt(chapter_entered), "");
             if (manager.getDBOperator().addNewNote(note) == 1)
             {
                 System.out.println("Note created successfully!");
-                manager.setSingleNoteWindow(new SingleNote(manager, validator, note));
+                manager.setSingleNoteWindow(new SingleNote(manager, validator, note, manager.getDBOperator()));
                 this.setVisible(false);
             }
             else
@@ -252,7 +267,7 @@ public class ReadingNotes extends javax.swing.JFrame {
         {
             if(note.getChapterNum() == Integer.parseInt(chapter_note_list.getSelectedValue()))
             {
-                manager.setSingleNoteWindow(new SingleNote(manager, validator, note));
+                manager.setSingleNoteWindow(new SingleNote(manager, validator, note, manager.getDBOperator()));
            }
         }
     }//GEN-LAST:event_chapter_note_listMousePressed
@@ -287,10 +302,16 @@ public class ReadingNotes extends javax.swing.JFrame {
         configureJList();
     }//GEN-LAST:event_reset_search_btnActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        manager.getReadingNoteWindow().setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JOptionPane chapter_input;
     private javax.swing.JList<String> chapter_note_list;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

@@ -22,10 +22,26 @@ public class User {
         return email;
         
     }
+    
+    public boolean isAdmin()
+    {
+        return user_type.equals("Administrator");
+    }
             
     public String getPassword()
     {
         return password;
+    }
+    
+    public String getName()
+    {
+        return name;
+    }
+    
+    public String setName(String name)
+    {
+        this.name = name;
+        return this.name;
     }
             
             

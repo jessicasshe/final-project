@@ -7,23 +7,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 
 public class InitializeProgram {
-    
-        /*
-        // Pasted default generated code for look & feel
-        try {
-            // Set the desired Look and Feel here
-            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-            // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            // UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
-
-        // Create and show your GUI components after setting the L&F
-        // e.g., new MyFrame().setVisible(true);
-
-        */
         
         public static void main(String args[]) {
         /* Set the Nimbus look and feel */

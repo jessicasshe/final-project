@@ -13,7 +13,6 @@ public class Login extends javax.swing.JFrame {
      */
     public Login(WindowManager manager, Validator validator, DBOperator db_operator) {
         initComponents();
-        System.out.println(System.getProperty("user.dir"));
         this.setVisible(true);
         this.pack();
         this.setLocationRelativeTo(null);
@@ -188,14 +187,22 @@ public class Login extends javax.swing.JFrame {
 
                if(db_operator.UserExists(user))
                {
-                   System.out.println("Login successful!");
                    user = db_operator.LoadExistingUser(user);
-                   this.setVisible(false);
-                   manager.setMenuWindow(new Menu(manager));
-                   //manager.setBookCollectionWindow(new BookCollection(manager, db_operator));
-               }
+                   db_operator.setUser(user);
+                   System.out.println("User after login is: " + db_operator.getUser().getName());
+                   if(manager.getMenuWindow() == null)
+                   {
+                       manager.setMenuWindow(new Menu(manager, user));
+                   }
+                   
+                   manager.getMenuWindow().setUser(user);
+                   manager.getMenuWindow().configureWelcomeMessage();
+                   manager.getMenuWindow().repaint();
 
-               else
+                   manager.getMenuWindow().setVisible(true);
+                   this.setVisible(false);
+               }
+                else
                {
 
                    manager.showErrorMessage(login_option_pane, "Wrong credentials!");

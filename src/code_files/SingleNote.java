@@ -7,10 +7,11 @@ public class SingleNote extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(SingleNote.class.getName());
 
 
-    public SingleNote(WindowManager manager, Validator validator, Note note) {
+    public SingleNote(WindowManager manager, Validator validator, Note note, DBOperator db_operator) {
         this.manager = manager;
         this.validator = validator;
         this.note = note;
+        this.db_operator = db_operator;
         initComponents();
         this.pack();
         this.setLocationRelativeTo(null);
@@ -21,9 +22,12 @@ public class SingleNote extends javax.swing.JFrame {
 
     public void configureDetails()
     {
+        
         title.setText(note.getBook().getName());
         chapter_num.setText(String.valueOf(note.getChapterNum()));
         date_label.setText(note.getLastEditedDate());
+        System.out.println(note.getText());
+        text_area.setText(note.getText());
     }
     
     @SuppressWarnings("unchecked")
@@ -33,7 +37,6 @@ public class SingleNote extends javax.swing.JFrame {
         option_pane = new javax.swing.JOptionPane();
         jPanel1 = new javax.swing.JPanel();
         title = new javax.swing.JLabel();
-        edit_details_btn = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         chapter_num = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -52,9 +55,6 @@ public class SingleNote extends javax.swing.JFrame {
         title.setFont(new java.awt.Font("Helvetica Neue", 1, 36)); // NOI18N
         title.setForeground(new java.awt.Color(255, 255, 255));
         title.setText("Insert Book Title");
-
-        edit_details_btn.setText("Edit Details");
-        edit_details_btn.addActionListener(this::edit_details_btnActionPerformed);
 
         jLabel2.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -79,7 +79,7 @@ public class SingleNote extends javax.swing.JFrame {
 
         date_label.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
         date_label.setForeground(new java.awt.Color(255, 255, 255));
-        date_label.setText("jLabel5");
+        date_label.setText("Insert Date Here");
 
         text_area.setColumns(20);
         text_area.setRows(5);
@@ -97,46 +97,37 @@ public class SingleNote extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addGap(48, 48, 48)
-                                .addComponent(chapter_num, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(chapter_num, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(41, 41, 41)
+                                .addComponent(jLabel4)
+                                .addGap(18, 18, 18)
+                                .addComponent(date_label))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(back_btn)
                                 .addGap(304, 304, 304)
                                 .addComponent(save_btn)
                                 .addGap(18, 18, 18)
                                 .addComponent(delete_btn))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(27, 27, 27)
-                        .addComponent(title)
-                        .addGap(240, 240, 240)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(date_label)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(edit_details_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addComponent(title)))
+                .addContainerGap(235, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(date_label)
-                            .addComponent(edit_details_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(16, 16, 16)
+                .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(chapter_num))
-                .addGap(11, 11, 11)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chapter_num)
+                    .addComponent(jLabel4)
+                    .addComponent(date_label))
                 .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(back_btn)
                     .addComponent(save_btn)
@@ -153,7 +144,7 @@ public class SingleNote extends javax.swing.JFrame {
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(234, Short.MAX_VALUE)))
+                    .addContainerGap(202, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,16 +159,23 @@ public class SingleNote extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void edit_details_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_details_btnActionPerformed
-        // update the existing note row 
-        String input = manager.showInputMessage(option_pane, "Enter the new date (YYYY-MM-DD: ");
-        date_label.setText(input);
-        validator.setChangesMade(true);  
-    }//GEN-LAST:event_edit_details_btnActionPerformed
-
     private void back_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back_btnActionPerformed
         // return to reading notes
-        manager.getReadingNoteWindow();
+        if(!note.getText().equals(text_area.getText()) || validator.changesMade())
+        {
+            if(!validator.changesSaved())
+            {
+                manager.showErrorMessage(option_pane, "You have unsaved changes!");
+            }
+            else{
+            
+                manager.setReadingNoteWindow(new ReadingNotes(manager, validator, note.getBook()));
+                this.setVisible(false);
+            }
+        }
+            
+        
+        manager.setReadingNoteWindow(new ReadingNotes(manager, validator, note.getBook()));
         this.setVisible(false);
     }//GEN-LAST:event_back_btnActionPerformed
 
@@ -187,12 +185,18 @@ public class SingleNote extends javax.swing.JFrame {
         if(result == JOptionPane.OK_OPTION)
         {
          // call database to query note 
+            int val = db_operator.deleteNote(note);
             
          // check if deleted successsfully
-            
-         // output success message
-            
-        // if user clicks OK go back to the reading notes screen 
+            if(val == 1)
+            {
+                manager.showPlainMessage(option_pane, "Successfully deleted note.");
+                
+            }
+            else
+            {
+                manager.showErrorMessage(option_pane, "Could not delete the note");
+            }
         }
         
         
@@ -214,10 +218,16 @@ public class SingleNote extends javax.swing.JFrame {
                 System.out.println("Saving changes");
                 
                 // get most recent text field 
-                
+                note.setText(text_area.getText());
                 if(manager.getDBOperator().saveNote(note) ==1)
                 {
-                    System.out.println("Saved changes successfully");
+                    manager.showPlainMessage(option_pane, "Saved changes successfully");
+                    // change the last edited date 
+                    note = db_operator.loadNote(note); // dont need a copy of the original note like in other windows 
+                    date_label.setText(note.getText());
+               
+                    // update the note list model
+                    manager.getReadingNoteWindow().configureListModel();
                     validator.setChangesSaved(true);
                 }
             }
@@ -236,7 +246,6 @@ public class SingleNote extends javax.swing.JFrame {
     private javax.swing.JLabel chapter_num;
     private javax.swing.JLabel date_label;
     private javax.swing.JButton delete_btn;
-    private javax.swing.JButton edit_details_btn;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
@@ -250,4 +259,5 @@ public class SingleNote extends javax.swing.JFrame {
     private Validator validator;
     private Note note;
     private String original_text;
+    private DBOperator db_operator;
 }

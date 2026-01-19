@@ -15,9 +15,9 @@ public class BookCollection extends javax.swing.JFrame {
      */
     public BookCollection(WindowManager manager, DBOperator db_operator)
     {
+        initComponents();
         this.pack();
         this.setLocationRelativeTo(null);
-        initComponents();
         this.setVisible(true);
         this.manager = manager;
         this.db_operator = db_operator;
@@ -60,8 +60,6 @@ public class BookCollection extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         to_read_label = new javax.swing.JLabel();
-        num_reading = new javax.swing.JLabel();
-        num_to_read = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         to_read_list = new javax.swing.JList<>();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -90,12 +88,6 @@ public class BookCollection extends javax.swing.JFrame {
         to_read_label.setForeground(new java.awt.Color(255, 255, 255));
         to_read_label.setText("To-Read");
 
-        num_reading.setForeground(new java.awt.Color(255, 255, 255));
-        num_reading.setText("(2)");
-
-        num_to_read.setForeground(new java.awt.Color(255, 255, 255));
-        num_to_read.setText("(7)");
-
         to_read_list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         to_read_list.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -119,7 +111,7 @@ public class BookCollection extends javax.swing.JFrame {
         create_book_btn.addActionListener(this::create_book_btnActionPerformed);
 
         finished_label.setForeground(new java.awt.Color(255, 255, 255));
-        finished_label.setText("Finished (12)");
+        finished_label.setText("Finished");
 
         finished_list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         finished_list.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -156,13 +148,9 @@ public class BookCollection extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(13, 13, 13)
                         .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(num_reading)
-                        .addGap(203, 203, 203)
-                        .addComponent(to_read_label)
-                        .addGap(18, 18, 18)
-                        .addComponent(num_to_read)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(to_read_label)
+                        .addGap(226, 226, 226)
                         .addComponent(finished_label)
                         .addGap(159, 159, 159))))
         );
@@ -182,8 +170,6 @@ public class BookCollection extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(to_read_label)
-                    .addComponent(num_reading)
-                    .addComponent(num_to_read)
                     .addComponent(finished_label))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -228,7 +214,7 @@ public class BookCollection extends javax.swing.JFrame {
         int book_id = db_operator.getBookId(list_name.getSelectedValue().toString());
         Book book = db_operator.getFullBookDetails(book_id);
         manager.setSingleBookWindow(new SingleBookInfo(book, manager, new Validator(), db_operator));
-        this.setVisible(false);
+        this.dispose();
         
         
 // saved before the resultset was closed
@@ -247,8 +233,6 @@ public class BookCollection extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JLabel num_reading;
-    private javax.swing.JLabel num_to_read;
     private javax.swing.JList<String> reading_list;
     private javax.swing.JButton search_btn;
     private javax.swing.JLabel to_read_label;

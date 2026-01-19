@@ -226,6 +226,7 @@ public class CreateBook extends javax.swing.JFrame {
                     manager.showErrorMessage(option_pane, "Unable to add the book.");
                     break;
             }
+       
         }
     }//GEN-LAST:event_create_btnActionPerformed
 
@@ -249,12 +250,17 @@ public class CreateBook extends javax.swing.JFrame {
         
         img_file_chooser.showOpenDialog(jPanel1);
         img_file_chooser.setApproveButtonText("Save");
+
+        if(img_file_chooser.getSelectedFile() != null)
+        {
+           System.out.println(img_file_chooser.getSelectedFile().getPath());
+           img_file = img_file_chooser.getSelectedFile();
+            book_img.setIcon(new ImageIcon(img_file.getPath()));
         
-        System.out.println(img_file_chooser.getSelectedFile().getPath());
         
-        img_file = img_file_chooser.getSelectedFile();
         
         book_img.setIcon(new ImageIcon(img_file.getPath()));
+        }
         // change image to the selected file
 
     }//GEN-LAST:event_upload_file_btnActionPerformed
@@ -275,8 +281,8 @@ public class CreateBook extends javax.swing.JFrame {
     
     private void back_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back_btnActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
-        manager.editWindowVisibility(true, manager.getBookCollectionWindow());
+        manager.setBookCollectionWindow(new BookCollection(manager, db_operator));
+        this.dispose();
     }//GEN-LAST:event_back_btnActionPerformed
 
     

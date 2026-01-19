@@ -1,13 +1,11 @@
 package code_files;
 
-
-import code_files.Announcements;
-import code_files.Announcements;
+import code_files.AnnouncementsPage;
+import code_files.AnnouncementsPage;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 
 
 /**
@@ -21,10 +19,11 @@ public class Menu extends javax.swing.JFrame {
     /**
      * Creates new form Menu
      */
-    public Menu(WindowManager manager) {
+    public Menu(WindowManager manager, User user) {
         this.manager = manager;
+        this.user = user;
         initComponents();
-        this.setVisible(true);
+        configureWelcomeMessage();
         setLocationRelativeTo(null); //centres it
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -40,10 +39,11 @@ public class Menu extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        announcements_btn = new javax.swing.JButton();
+        book_list_menu_btn = new javax.swing.JButton();
+        exit_btn = new javax.swing.JButton();
+        welcome_label = new javax.swing.JLabel();
+        user_label = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -51,66 +51,74 @@ public class Menu extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(89, 69, 69));
         jPanel1.setPreferredSize(new java.awt.Dimension(900, 600));
 
-        jButton1.setBackground(new java.awt.Color(129, 91, 91));
-        jButton1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(224, 118, 118));
-        jButton1.setText("ANNOUNCEMENTS");
-        jButton1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69)));
-        jButton1.setPreferredSize(new java.awt.Dimension(220, 120));
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        announcements_btn.setBackground(new java.awt.Color(129, 91, 91));
+        announcements_btn.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
+        announcements_btn.setForeground(new java.awt.Color(224, 118, 118));
+        announcements_btn.setText("ANNOUNCEMENTS");
+        announcements_btn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69)));
+        announcements_btn.setPreferredSize(new java.awt.Dimension(220, 120));
+        announcements_btn.addActionListener(this::announcements_btnActionPerformed);
 
-        jButton2.setBackground(new java.awt.Color(129, 91, 91));
-        jButton2.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(224, 118, 118));
-        jButton2.setText("NOTES");
-        jButton2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69)));
-        jButton2.setPreferredSize(new java.awt.Dimension(220, 120));
-        jButton2.addActionListener(this::jButton2ActionPerformed);
+        book_list_menu_btn.setBackground(new java.awt.Color(129, 91, 91));
+        book_list_menu_btn.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
+        book_list_menu_btn.setForeground(new java.awt.Color(224, 118, 118));
+        book_list_menu_btn.setText("BOOK LIST");
+        book_list_menu_btn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69)));
+        book_list_menu_btn.setPreferredSize(new java.awt.Dimension(220, 120));
+        book_list_menu_btn.addActionListener(this::book_list_menu_btnActionPerformed);
 
-        jButton3.setBackground(new java.awt.Color(129, 91, 91));
-        jButton3.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(224, 118, 118));
-        jButton3.setText("BOOK LIST");
-        jButton3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69)));
-        jButton3.setPreferredSize(new java.awt.Dimension(220, 120));
-        jButton3.addActionListener(this::jButton3ActionPerformed);
+        exit_btn.setBackground(new java.awt.Color(255, 248, 234));
+        exit_btn.setForeground(new java.awt.Color(154, 69, 69));
+        exit_btn.setText("Log Out");
+        exit_btn.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(72, 69, 69), 1, true));
+        exit_btn.setPreferredSize(new java.awt.Dimension(120, 40));
+        exit_btn.addActionListener(this::exit_btnActionPerformed);
 
-        jButton4.setBackground(new java.awt.Color(255, 248, 234));
-        jButton4.setForeground(new java.awt.Color(154, 69, 69));
-        jButton4.setText("EXIT");
-        jButton4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(72, 69, 69), 1, true));
-        jButton4.setPreferredSize(new java.awt.Dimension(120, 40));
-        jButton4.addActionListener(this::jButton4ActionPerformed);
+        welcome_label.setFont(new java.awt.Font("Helvetica Neue", 1, 36)); // NOI18N
+        welcome_label.setForeground(new java.awt.Color(255, 255, 255));
+        welcome_label.setText("Welcome, ");
+
+        user_label.setFont(new java.awt.Font("Helvetica Neue", 1, 36)); // NOI18N
+        user_label.setForeground(new java.awt.Color(255, 255, 255));
+        user_label.setText("Insert User Here");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(exit_btn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(70, 70, 70)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(70, 70, 70)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(welcome_label)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(user_label))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(50, Short.MAX_VALUE))
+                        .addGap(44, 44, 44)
+                        .addComponent(book_list_menu_btn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(37, 37, 37)
+                        .addComponent(announcements_btn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(215, 215, 215))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(74, 74, 74)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(123, 123, 123)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(49, 49, 49)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(welcome_label)
+                            .addComponent(user_label)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(exit_btn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(127, 127, 127)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(243, Short.MAX_VALUE))
+                    .addComponent(book_list_menu_btn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(announcements_btn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(259, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -131,42 +139,62 @@ public class Menu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    public void configureWelcomeMessage()
+    {
+        user_label.setText(user.getName());
+    }
+    
+    public void setUser(User user)
+    {
+        this.user = user;
+    }
+    
+    private void exit_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exit_btnActionPerformed
         // TODO add your handling code here:
-        //EXIT
-        
-    }//GEN-LAST:event_jButton4ActionPerformed
+        //return to login screen
+        if(manager.getLoginWindow() == null)
+        {
+            manager.setLoginWindow(new Login(manager, new Validator(), manager.getDBOperator()));
+            // mistake: passed in a completely new db operator that didnt change the user properly w the setter method
+        }
+      
+        manager.getLoginWindow().setVisible(true);
+        this.setVisible(false); 
+    }//GEN-LAST:event_exit_btnActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        //BOOK LIST MENU
+    private void book_list_menu_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_book_list_menu_btnActionPerformed
         StreakTracker.promptIfNeeded(this);
-        new BookListMenu().setVisible(true);
-        //this.dispose();
+        if(manager.getBookListMenuWindow() == null)
+        {
+            manager.setBookListMenuWindow(new BookListMenu(manager));
+        }
+        manager.getBookListMenuWindow().setVisible(true);
         this.setVisible(false);
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_book_list_menu_btnActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void announcements_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_announcements_btnActionPerformed
 
-        //ANNOUNCEMENTS
-        manager.setAnnouncementsWindow(new Announcements(manager, manager.getDBOperator()));
-        //this.dispose();
+        //manager.getDBOperator().setUser(user);
+        if(manager.getAnnouncementsWindow() == null)
+        {
+            manager.setAnnouncementsWindow(new AnnouncementsPage(manager, manager.getDBOperator(), new Validator()));
+        }
+        manager.getAnnouncementsWindow().roleCheck();
+        System.out.println(user.isAdmin());
+        manager.getAnnouncementsWindow().repaint();
+        manager.getAnnouncementsWindow().setVisible(true);
         this.setVisible(false);
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        //NOTES
-        //this.dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_announcements_btnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton announcements_btn;
+    private javax.swing.JButton book_list_menu_btn;
+    private javax.swing.JButton exit_btn;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel user_label;
+    private javax.swing.JLabel welcome_label;
     // End of variables declaration//GEN-END:variables
     private WindowManager manager;
+    private User user;
 }

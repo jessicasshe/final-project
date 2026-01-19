@@ -7,10 +7,7 @@ package code_files;
 
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author User
- */
+
 public class BookListMenu extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BookListMenu.class.getName());
@@ -18,11 +15,13 @@ public class BookListMenu extends javax.swing.JFrame {
     /**
      * Creates new form BookListMenu
      */
-    public BookListMenu() {
+    public BookListMenu(WindowManager manager) {
+        this.manager = manager;
         initComponents();
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setVisible(true);
     }
 
     /**
@@ -35,42 +34,42 @@ public class BookListMenu extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        shared_btn = new javax.swing.JButton();
+        personal_btn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
+        back_btn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(89, 69, 69));
         jPanel1.setPreferredSize(new java.awt.Dimension(900, 600));
 
-        jButton1.setBackground(new java.awt.Color(129, 91, 91));
-        jButton1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(224, 118, 118));
-        jButton1.setText("SHARED");
-        jButton1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69)));
-        jButton1.setPreferredSize(new java.awt.Dimension(250, 140));
+        shared_btn.setBackground(new java.awt.Color(129, 91, 91));
+        shared_btn.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
+        shared_btn.setForeground(new java.awt.Color(224, 118, 118));
+        shared_btn.setText("SHARED");
+        shared_btn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69)));
+        shared_btn.setPreferredSize(new java.awt.Dimension(250, 140));
 
-        jButton2.setBackground(new java.awt.Color(129, 91, 91));
-        jButton2.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(224, 118, 118));
-        jButton2.setText("PERSONAL");
-        jButton2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69)));
-        jButton2.setPreferredSize(new java.awt.Dimension(250, 140));
-        jButton2.addActionListener(this::jButton2ActionPerformed);
+        personal_btn.setBackground(new java.awt.Color(129, 91, 91));
+        personal_btn.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
+        personal_btn.setForeground(new java.awt.Color(224, 118, 118));
+        personal_btn.setText("PERSONAL");
+        personal_btn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69), new java.awt.Color(89, 69, 69)));
+        personal_btn.setPreferredSize(new java.awt.Dimension(250, 140));
+        personal_btn.addActionListener(this::personal_btnActionPerformed);
 
         jLabel1.setFont(new java.awt.Font("Yu Gothic UI Semilight", 2, 20)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 248, 234));
         jLabel1.setText("Choose which book list you want to access:");
 
-        jButton4.setBackground(new java.awt.Color(255, 248, 234));
-        jButton4.setFont(new java.awt.Font("Segoe UI Semibold", 0, 22)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(154, 69, 69));
-        jButton4.setText("BACK");
-        jButton4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(72, 69, 69), 1, true));
-        jButton4.setPreferredSize(new java.awt.Dimension(120, 40));
-        jButton4.addActionListener(this::jButton4ActionPerformed);
+        back_btn.setBackground(new java.awt.Color(255, 248, 234));
+        back_btn.setFont(new java.awt.Font("Segoe UI Semibold", 0, 22)); // NOI18N
+        back_btn.setForeground(new java.awt.Color(154, 69, 69));
+        back_btn.setText("BACK");
+        back_btn.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(72, 69, 69), 1, true));
+        back_btn.setPreferredSize(new java.awt.Dimension(120, 40));
+        back_btn.addActionListener(this::back_btnActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -78,15 +77,15 @@ public class BookListMenu extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(143, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(personal_btn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(90, 90, 90)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(shared_btn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(167, 167, 167))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(62, 62, 62)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(back_btn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(243, 243, 243)
                         .addComponent(jLabel1)))
@@ -96,13 +95,13 @@ public class BookListMenu extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(113, 113, 113)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(back_btn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(shared_btn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(personal_btn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(251, Short.MAX_VALUE))
         );
 
@@ -124,18 +123,19 @@ public class BookListMenu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void back_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back_btnActionPerformed
         // TODO add your handling code here:
         //EXIT
         System.exit(0);
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_back_btnActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void personal_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_personal_btnActionPerformed
         // TODO add your handling code here:
- 
+        manager.setBookCollectionWindow(new BookCollection(manager, manager.getDBOperator()));
+        this.setVisible(false);
         //POPUP AND PERSONAL LIST
         //JOptionPane.showConfirmDialog(this, "Have you read your book today??", "Book Streak", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_personal_btnActionPerformed
 
   
 
@@ -146,10 +146,11 @@ public class BookListMenu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton back_btn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton personal_btn;
+    private javax.swing.JButton shared_btn;
     // End of variables declaration//GEN-END:variables
+    private WindowManager manager;
 }

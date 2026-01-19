@@ -325,6 +325,8 @@ public class SingleBookInfo extends javax.swing.JFrame {
             collection_selector.setVisible(false);
             remove_from_collection_btn.setVisible(false);
             open_reading_notes_btn.setVisible(false);
+            shelf_name.setVisible(false);
+            jLabel5.setVisible(false);
         }
         else
         {
@@ -374,31 +376,12 @@ public class SingleBookInfo extends javax.swing.JFrame {
         validator.setChangesMade(false); 
         System.out.println(validator.changesMade());// Initialize to false: No changes have been made
     }
-                
-   /* 
-   Updates the users BookCollection when adding or removing a book. 
-   Can be called from add book or remove book button
-   @ param: action specified, "add" or "remove 
-   */
-    private void update_collection_lists(String action)      
-    {  
-        // gets the model of the shelf to change to
-        DefaultListModel<String> list = manager.getBookCollectionWindow().getListReference(collection_selector.getSelectedItem().toString());
-        String name = book_name.getText();
-        
-        switch(action)
-        {
-            case "add": 
-                list.addElement(name);
-            case "remove":
-               list.removeElement(name);
-        }
-    }
     
     /* 
     Updates the users BookCollection after saving changes for potential shelf change
     @ param: prev shelf list reference , local new_user_book that was just used for updates & discarded later
     */
+   /*
     private void update_collection_lists(String previous_shelf_type, UserBook new_user_book)
     {
         DefaultListModel<String> list = manager.getBookCollectionWindow().getListReference(new_user_book.getShelfType());
@@ -420,6 +403,7 @@ public class SingleBookInfo extends javax.swing.JFrame {
             list.addElement(new_user_book.getName().trim());
         }
     }
+   */
     
         
         /* 
@@ -459,7 +443,7 @@ public class SingleBookInfo extends javax.swing.JFrame {
                     if(users_books_rows_updated == 1)
                     {
                         manager.showPlainMessage(single_book_option_pane, "UsersBooks columns updated successfully!");
-                        update_collection_lists(user_book.getShelfType(), new_user_book);
+                       // update_collection_lists(user_book.getShelfType(), new_user_book);
                     }
                 }
             }    
@@ -503,16 +487,36 @@ public class SingleBookInfo extends javax.swing.JFrame {
 //GEN-LAST:event_save_details_btnActionPerformed
 
     private void remove_from_collection_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_remove_from_collection_btnActionPerformed
-        // TODO add your handling code here:
+        int choice = manager.showConfirmMessage(error_option_pane, "Are you sure you want to remove the book to your collection?");
+        if(choice == JOptionPane.OK_OPTION)
+        {
+            int val = db_operator.removeBookFromUserBooks(user_book);
+            if(val == 1)
+            {
+                manager.showPlainMessage(error_option_pane, "Successfully removed from your collection!");            
+            }
+            else
+            {
+                manager.showErrorMessage(error_option_pane, "Something went wrong, could not remove from your collection.");
+            }
+        }
     }//GEN-LAST:event_remove_from_collection_btnActionPerformed
 
     private void collection_selectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_collection_selectorActionPerformed
-        validator.setChangesMade(true);
+        if(!collection_selector.getSelectedItem().equals(user_book.getShelfType()))
+        {
+            validator.setChangesMade(true);
+            System.out.println("Changes were made to collection selector");
+
+        }
+        else
+        {
+            validator.setChangesMade(false);
+        }
         if(validator.changesSaved())
         {
             validator.setChangesSaved(false);
         }
-        System.out.println("Changes were made to collection selector");
     }//GEN-LAST:event_collection_selectorActionPerformed
 
     private void add_book_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_book_btnActionPerformed
@@ -614,16 +618,27 @@ public class SingleBookInfo extends javax.swing.JFrame {
     private void change_cover_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_change_cover_btnActionPerformed
         img_file_chooser.setVisible(true);
 
-        img_file_chooser.showOpenDialog(BookDetailsPanel);
-        book_img_file = new File(img_file_chooser.getSelectedFile().getPath());
-        if(book_img_file != null)
+        int value = img_file_chooser.showOpenDialog(BookDetailsPanel);
+        if(value != 0)
         {
+            book_img_file = new File(img_file_chooser.getSelectedFile().getPath());
             book_img.setIcon(new ImageIcon(book_img_file.getPath()));
         }
+        
     }//GEN-LAST:event_change_cover_btnActionPerformed
 
     private void open_reading_notes_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_open_reading_notes_btnActionPerformed
         // open reading notes window & use overloaded method to give the specific book
+        if(manager.getReadingNoteWindow() != null)
+        {
+            manager.getReadingNoteWindow().setVisible(true);
+        }
+        else
+        {
+        manager.setReadingNoteWindow(new ReadingNotes(manager, validator, book));
+        }
+        this.setVisible(false);
+
     }//GEN-LAST:event_open_reading_notes_btnActionPerformed
 
     private void back_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back_btnActionPerformed
@@ -632,7 +647,8 @@ public class SingleBookInfo extends javax.swing.JFrame {
         {
             if(validator.changesSaved())
             {
-                manager.editWindowVisibility(true, manager.getBookCollectionWindow());
+                manager.setBookCollectionWindow(new BookCollection(manager, db_operator));
+                this.dispose();
             }
             else
             {
@@ -642,13 +658,15 @@ public class SingleBookInfo extends javax.swing.JFrame {
         else
         {
             manager.setBookCollectionWindow(new BookCollection(manager, db_operator));
-            this.setVisible(false);
+            this.dispose();
         }
         
     }//GEN-LAST:event_back_btnActionPerformed
 
     private void reset_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reset_btnActionPerformed
         configureBookDetails();
+        validator.setChangesMade(true);
+        validator.setChangesSaved(false);
         
     }//GEN-LAST:event_reset_btnActionPerformed
 
