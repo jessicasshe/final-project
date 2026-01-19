@@ -1,0 +1,3 @@
+LocalDate java package:
+--> Get current local date: LocalDate.now()
+--> Get yesterday's date: LocalDate.minusDays(# days)
