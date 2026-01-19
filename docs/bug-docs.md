@@ -24,3 +24,5 @@ Solution -> Check for test files, make sure they are named test and not anything
 
 ## Problem with admin button configurations in Announcements after previous login/logout
 - Track how user is being updated using debug features
+-> Problem: Was creating a new window each time when the user clicks 'Log Out', passing in a new DB operator instead of the one the other windows were referencing. The announcement window and the login window were not referencing the same user, giving the wrong boolean values for checking user type in roleCheck()
+-> Solution: Added conditional logic to check whether to show or to create the next window
