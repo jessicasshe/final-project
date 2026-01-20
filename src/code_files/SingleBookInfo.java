@@ -1,14 +1,7 @@
 package code_files;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import code_files.DBOperator;
 import javax.swing.ImageIcon;
-import java.io.IOException;
-import javax.swing.SwingUtilities;
 import java.io.File;
-import java.io.IOException;
-import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import java.lang.NumberFormatException;
 import java.lang.NullPointerException;
@@ -17,10 +10,6 @@ import javax.swing.JFileChooser;
 
 
 public class SingleBookInfo extends javax.swing.JFrame {
-    
-    // how to represent the previous values incase user wants to reset details?
-    // -> Save ann initial book object w initial attributes
-    // if changes are made, just recreate the book object when saved instead of having isolated variables flowing around
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(SingleBookInfo.class.getName());
 
@@ -324,8 +313,6 @@ public class SingleBookInfo extends javax.swing.JFrame {
     }
     public void configurePersonalButtons()
     {
-        System.out.println(book.getName());
-        System.out.println(db_operator.ExistsInUsersBooks(book.getBookId()));
         if(!db_operator.ExistsInUsersBooks(book.getBookId()))
         {
             showUsersBooksButtons = false;
@@ -662,26 +649,53 @@ public class SingleBookInfo extends javax.swing.JFrame {
     private void open_reading_notes_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_open_reading_notes_btnActionPerformed
         // open reading notes window & use overloaded method to give the specific book
 
-        if(manager.getReadingNoteWindow() != null)
+        if(validator.changesMade())
         {
-            System.out.println(book.getName());
-            manager.getReadingNoteWindow().setBook(book);
-            manager.getReadingNoteWindow().configureListModel();
+            if(validator.changesSaved())
+            {
+                if(manager.getReadingNoteWindow() != null)
+                {
+                    manager.getReadingNoteWindow().setBook(book);
+                    manager.getReadingNoteWindow().configureListModel();
 
-            manager.getReadingNoteWindow().configureName();
-            manager.getReadingNoteWindow().setVisible(true);
-            
+                    manager.getReadingNoteWindow().configureName();
+                    manager.getReadingNoteWindow().setVisible(true);
+
+                }
+                else
+                {
+                manager.setReadingNoteWindow(new ReadingNotes(manager, validator, book));
+                }
+                this.setVisible(false);
+            }
+            else
+            {
+                manager.showErrorMessage(error_option_pane, "You have unsaved changes!");
+            }
         }
         else
         {
-        manager.setReadingNoteWindow(new ReadingNotes(manager, validator, book));
+            if(manager.getReadingNoteWindow() != null)
+                {
+                    System.out.println(book.getName());
+                    manager.getReadingNoteWindow().setBook(book);
+                    manager.getReadingNoteWindow().configureListModel();
+
+                    manager.getReadingNoteWindow().configureName();
+                    manager.getReadingNoteWindow().setVisible(true);
+
+                }
+                else
+                {
+                manager.setReadingNoteWindow(new ReadingNotes(manager, validator, book));
+                }
+                this.setVisible(false);
         }
-        this.setVisible(false);
+        
 
     }//GEN-LAST:event_open_reading_notes_btnActionPerformed
 
     private void back_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back_btnActionPerformed
-        // TODO add your handling code here:
         if(validator.changesMade() == true)
         {
             if(validator.changesSaved())

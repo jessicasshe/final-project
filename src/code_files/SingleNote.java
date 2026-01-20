@@ -33,7 +33,6 @@ public class SingleNote extends javax.swing.JFrame {
         title.setText(note.getBook().getName());
         chapter_num.setText(String.valueOf(note.getChapterNum()));
         date_label.setText(note.getLastEditedDate());
-        System.out.println(note.getText());
         text_area.setText(note.getText());
     }
     

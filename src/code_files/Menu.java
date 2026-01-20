@@ -136,7 +136,6 @@ public class Menu extends javax.swing.JFrame {
 
     public void configureWelcomeMessage()
     {
-        System.out.println(user.getName());
         user_label.setText(user.getName());
     }
     

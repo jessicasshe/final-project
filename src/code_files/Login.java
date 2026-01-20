@@ -198,7 +198,6 @@ public class Login extends javax.swing.JFrame {
                    }
                    
                    manager.getMenuWindow().setUser(user);
-                   System.out.println(user.getName());
                    manager.getMenuWindow().configureWelcomeMessage();
                    manager.getMenuWindow().repaint();
                    manager.getMenuWindow().setVisible(true);

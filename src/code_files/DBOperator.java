@@ -411,7 +411,6 @@ public class DBOperator {
             pstmt.setString(2, userbook.getShelfType());
             pstmt.setInt(3, userbook.getBookId());
             int updated_val = pstmt.executeUpdate();
-            System.out.println(updated_val);
             return updated_val; // change later
         }
         catch(SQLException e)
@@ -435,12 +434,10 @@ public class DBOperator {
             switch(search_type)
             {   
                 case "author":
-                    System.out.println("Searching by author..");
                     pstmt.setString(1, search_value);
                     break;
 
                 case "book_name":
-                    System.out.println("Searching by title...");
                     pstmt.setString(1, search_value);
                     break;
             }
@@ -476,7 +473,6 @@ public class DBOperator {
             pstmt.setString(3, shelf);
             pstmt.setInt(4, book.getBookId());
             int value = pstmt.executeUpdate();
-            System.out.println("DB return value:" + value);
             return value;
         }
         catch(SQLException e)
@@ -550,7 +546,6 @@ public class DBOperator {
             {
                 while(rs.next())
                 {
-                    System.out.println("Book being added is called: " + rs.getString("book_name"));
                     book_names.addElement(rs.getString("book_name"));           
                 }
                 return book_names;
@@ -597,36 +592,19 @@ public class DBOperator {
     
     
     /*
-    Called from SingleBookInfo to get the full row of a book (Joined with user_id)
+    Called from SingleBookInfo to get the full row of a book
     @ param: book_id of book being viewed
     @ return: Book with attributes of column values of the resultset of the book 
     */
     
     public Book getFullBookDetails(int book_id) 
     {
-        // split the method into 2: one to check if book exists (use in createbook) then one to create the object
         try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT * from Books WHERE Books.book_id ="+book_id))
         {
-            // left join (Books table) because some books might not belong to the user yet      
             try(ResultSet rs = pstmt.executeQuery())
             {
                 if(rs.next())
-                {     // printing for debugging purposes 
-
-                    System.out.println("Book ID: " + rs.getInt("book_id"));
-                    System.out.println("Book name" + rs.getString("book_name"));
-                    System.out.println("Book author" + rs.getString("author"));
-                    System.out.println("Num. pages" + rs.getInt("num_pages"));
-                    System.out.println("Total users read" + rs.getInt("total_users_read"));
-                    if(rs.getBytes("image") != null)
-                    {
-                        System.out.println("A book cover exists!");
-                    }
-                    else
-                    {
-                        System.out.println("No picture available");
-                    }
-                    
+                {    
                     Book book = new Book(rs.getInt("book_id"), rs.getString("book_name"), rs.getString("author"), rs.getInt("num_pages"), rs.getInt("total_users_read"), rs.getBytes("image"));
                     return book;
                 }
@@ -641,31 +619,22 @@ public class DBOperator {
         return null;
     }
     
+    /*
+    
+    Called from SingleBookWindow to initialize user book details, after the user clicks on a book in their collection
+    @ param : book_id 
+    @ return : userbook object
+    
+    */
     public UserBook getUsersBooksDetails(int book_id)
     {
         try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT * from UsersBooks INNER JOIN Books ON Books.book_id = UsersBooks.book_id WHERE Books.book_id ="+book_id))
         {
-            // left join (Books table) because some books might not belong to the user yet      
             try(ResultSet rs = pstmt.executeQuery())
             {
                 if(rs.next())
-                {     // printing for debugging purposes 
-
-                    
-                    System.out.println("ResultSet UserBook Info: ");
-                    System.out.println("Page progress " + rs.getInt("page_progress"));
-                    System.out.println("Shelf type" + rs.getString("shelf_type"));
-                    if(rs.getBytes("image") != null)
-                    {
-                        System.out.println("A book cover exists!");
-                    }
-                    else
-                    {
-                        System.out.println("No picture available");
-                    }
-                    
+                {    
                     UserBook user_book = new UserBook(user, rs.getInt("book_id"), rs.getString("book_name"), rs.getString("author"), rs.getInt("num_pages"), rs.getInt("total_users_read"), rs.getBytes("image"), rs.getInt("page_progress"), rs.getString("shelf_type"));
-
                     return user_book;
                 }
             }
@@ -734,6 +703,13 @@ public class DBOperator {
             return false; 
     }
     
+    
+    /*
+    Called from the Login window to load a user that already exists 
+    @ param : a user object with the inputted values
+    @ return : the user object with the other column values (id, streak value, name..)
+    
+    */
     public User LoadExistingUser(User user)
     {
         try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT * from Users INNER JOIN Streak on Users.user_id = Streak.user_id WHERE email = ? and password = ?"))
@@ -748,7 +724,6 @@ public class DBOperator {
                user.setName(rs.getString("name"));
                // to update the most recent login date 
                user.setLastDateRead(rs.getString("last_date_read"));
-               System.out.println("Last date read was: " +user.getLastDateRead());
                user.setStreak(rs.getInt("streak_value"));
                return user;
             }
@@ -785,7 +760,6 @@ public class DBOperator {
                     if(rs.next())
                     {
 
-                        System.out.print("USER ROW ID" + rs.getInt(1));
                         return rs.getInt(1); // get the first result of the generated key
                     }
                 }
@@ -800,9 +774,11 @@ public class DBOperator {
         return -1;
     }
     
-    /* Called as a helper method when creating a new user
-    @ param : 
-    @ return : 1 for success, 0 for fail, -1 for exception
+    
+    /*
+    Called from Signup window to initialize the streak row for the created user. 
+    @ return : number of rows affected
+    
     */
     public int createNewStreak()
     {
@@ -822,7 +798,11 @@ public class DBOperator {
     }
     
     
-    
+    /*
+    Called from the CreateBook window. 
+    @ param : a book object with the inputted values 
+    @ return : int of rows affected
+    */
     public int createBook(Book book)
     {
         try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("INSERT or IGNORE into Books (book_name, author, num_pages, image) VALUES(?, ?, ?, ?)")){
@@ -832,7 +812,8 @@ public class DBOperator {
             pstmt.setInt(3, book.getNumPages());
  
             int val = pstmt.executeUpdate();
-            if(val == 1) // book added successfully
+            
+            if(val == 1) 
             {
                return 1;
             }
@@ -846,16 +827,7 @@ public class DBOperator {
             System.out.println("Something went wrong trying to insert books into the database");
             e.printStackTrace();
         }
-        return -1; // error showed up 
+        return -1; 
     }
     
-   
-  /* public File convertBytetoFile(byte[] img_byte)
-   {
-       try{
-           ByteArrayInputStream byte_input = new ByteArrayInputStream(img_byte);
-           return byte_input.
-       }
-   }
-*/
 }

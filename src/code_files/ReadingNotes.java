@@ -178,6 +178,9 @@ public class ReadingNotes extends javax.swing.JFrame {
         return chapters;     
     }
     
+    /*
+    Returns a model for sorted chapters 
+    */
     public DefaultListModel<String> configureListModel(ArrayList<Integer> specific_chapters)
     {
         
@@ -189,12 +192,18 @@ public class ReadingNotes extends javax.swing.JFrame {
         return chapters;     
     }
         
+    /*
+    Reset the list after sorting
+    */
     private void configureJList()
     {
         chapters.clear();
         chapter_note_list.setModel((DefaultListModel<String>)(configureListModel()));
     }
     
+    /*
+    Filters the notes based on the chapter the user searched for
+    */
     private void filterSearch(int chapter_num)
     {
         chapters.clear();
@@ -248,7 +257,6 @@ public class ReadingNotes extends javax.swing.JFrame {
             Note note = new Note(manager.getDBOperator().getUser(), book, "", Integer.parseInt(chapter_entered), "");
             if (manager.getDBOperator().addNewNote(note) == 1)
             {
-                System.out.println("Note created successfully!");
                 manager.setSingleNoteWindow(new SingleNote(manager, validator, note, manager.getDBOperator()));
                 this.setVisible(false);
             }

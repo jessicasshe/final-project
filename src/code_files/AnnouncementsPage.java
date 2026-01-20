@@ -29,8 +29,6 @@ public class AnnouncementsPage extends javax.swing.JFrame {
     
     public void roleCheck()
     {
-        System.out.println("User at role check is " + db_operator.getUser().getName());
-        System.out.println(db_operator.getUser().isAdmin());
         save_btn.setVisible(db_operator.getUser().isAdmin());
         announcement_field.setEditable(db_operator.getUser().isAdmin());
         edit_meeting_btn.setVisible(db_operator.getUser().isAdmin());

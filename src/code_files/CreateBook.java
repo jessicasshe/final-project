@@ -254,7 +254,6 @@ public class CreateBook extends javax.swing.JFrame {
 
         if(val == JFileChooser.APPROVE_OPTION)
         {
-           System.out.println(img_file_chooser.getSelectedFile().getPath());
            img_file = img_file_chooser.getSelectedFile();
            book_img.setIcon(new ImageIcon(img_file.getPath()));
 
@@ -270,7 +269,7 @@ public class CreateBook extends javax.swing.JFrame {
         }  
         catch(IOException e)
         {
-               System.out.println("Something went wrong while trying to convert the file");
+            manager.showErrorMessage(option_pane, "Something went wrong trying to convert the file.");
                e.printStackTrace();
         }
        return null;
