@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.swing.DefaultListModel;
 import java.util.ArrayList;
+import java.sql.Statement;
 
 public class DBOperator {
    
@@ -105,7 +106,7 @@ public class DBOperator {
     }
     
     
-    public int getStreak()
+    public int getStreak() // try joining tables Users and Streak when loading a user?
     {
         try(Connection conn = newConnection(); 
             PreparedStatement pstmt = conn.prepareStatement("SELECT streak_value FROM Streak WHERE user_id = ?"))
@@ -475,6 +476,7 @@ public class DBOperator {
             pstmt.setString(3, shelf);
             pstmt.setInt(4, book.getBookId());
             int value = pstmt.executeUpdate();
+            System.out.println("DB return value:" + value);
             return value;
         }
         catch(SQLException e)
@@ -763,26 +765,32 @@ public class DBOperator {
     /*
     Called from the Signup Window to create a new user row 
     @ param: User object w/ default values
-    @ return: update value (1= success, 0=fail, -1= exception)
+    @ return: Last inserted row id 
     
     */
     public int CreateNewUser(User user) 
     {
-        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("INSERT into Users (name, email, password, user_type, last_logged_in) VALUES(?, ?, ?, ?, DATE('now', 'localtime'))")) {
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("INSERT into Users (name, email, password, user_type, last_date_read) VALUES(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, user.getName());
             pstmt.setString(2, user.getEmail());
             pstmt.setString(3, user.getPassword());
             pstmt.setString(4, user.getUserType());
+            pstmt.setString(5, user.getLastDateRead());
+            int val = pstmt.executeUpdate();
             
-            int update = pstmt.executeUpdate();
-            if(update == 1)
+            if(val == 1) // 1 affected row 
             {
-                if(createNewStreak() == 1)
+                try(ResultSet rs = pstmt.getGeneratedKeys())
                 {
-                    return 1;
+                    if(rs.next())
+                    {
+
+                        System.out.print("USER ROW ID" + rs.getInt(1));
+                        return rs.getInt(1); // get the first result of the generated key
+                    }
                 }
             }
-            return 0;
+           
         }
         catch(SQLException e)
         {

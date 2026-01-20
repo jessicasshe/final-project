@@ -16,6 +16,7 @@ public class AnnouncementsPage extends javax.swing.JFrame {
      public AnnouncementsPage(WindowManager manager, DBOperator db_operator, Validator validator) {
        this.manager = manager;
        this.db_operator = db_operator;
+       this.meeting_link = db_operator.getLink();
        this.validator = validator;
        initComponents();
        loadAnnouncement();
@@ -24,6 +25,7 @@ public class AnnouncementsPage extends javax.swing.JFrame {
        this.setLocationRelativeTo(null);
        this.setVisible(true);
     }
+     
     
     public void roleCheck()
     {
@@ -209,6 +211,7 @@ public class AnnouncementsPage extends javax.swing.JFrame {
     }//GEN-LAST:event_join_meeting_btnActionPerformed
 
     private void back_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back_btnActionPerformed
+        System.out.println(db_operator.getUser().getUserType());
         if(!announcement_field.getText().equals(announcement.getText())) // edits have been made
         {
             if(validator.changesSaved() == true) // valid, no unsaved changes
@@ -290,7 +293,7 @@ public class AnnouncementsPage extends javax.swing.JFrame {
     private DBOperator db_operator;
     private Announcement announcement;
     private Validator validator;
-    private String meeting_link = db_operator.getLink();
+    private String meeting_link;
     private JEditorPane editorPane = new JEditorPane();
 
 }

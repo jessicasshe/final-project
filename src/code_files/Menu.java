@@ -136,6 +136,7 @@ public class Menu extends javax.swing.JFrame {
 
     public void configureWelcomeMessage()
     {
+        System.out.println(user.getName());
         user_label.setText(user.getName());
     }
     
@@ -161,26 +162,29 @@ public class Menu extends javax.swing.JFrame {
     private void book_list_menu_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_book_list_menu_btnActionPerformed
             LocalDate today = LocalDate.now(); // local time
 
-            if(streak_msg_clicked == false && !user.getLastDateRead().equals(today.toString()))
+            if(user.getLastDateRead() != null)
             {
-                int input = JOptionPane.showConfirmDialog(null, "Have you read a chapter of a book today?", "Streak Tracker", JOptionPane.YES_NO_OPTION);
-                if(input == JOptionPane.YES_OPTION) 
+                if(streak_msg_clicked == false && !user.getLastDateRead().equals(today.toString()))
                 {
-                    // check if the user didn't log their streak the day before & reset if so
-                    if(!user.getLastDateRead().equals((today.minusDays(1)).toString())) 
+                    int input = JOptionPane.showConfirmDialog(null, "Have you read a chapter of a book today?", "Streak Tracker", JOptionPane.YES_NO_OPTION);
+                    if(input == JOptionPane.YES_OPTION) 
                     {
-                        user.setStreak(0);
+                        // check if the user didn't log their streak the day before & reset if so
+                        if(!user.getLastDateRead().equals((today.minusDays(1)).toString())) 
+                        {
+                            user.setStreak(0);
+                        }
+                        else 
+                        {
+                            user.setStreak(user.getStreak() +1);
+                            // call db method to update last date read to today
+                            manager.getDBOperator().saveLastDateRead();
+                        }
+                        manager.showPlainMessage(option_pane, "Your streak is " + user.getStreak());
+                        // update the streak 
+                        manager.getDBOperator().saveStreak();
+                        streak_msg_clicked = true;
                     }
-                    else 
-                    {
-                        user.setStreak(user.getStreak() +1);
-                        // call db method to update last date read to today
-                        manager.getDBOperator().saveLastDateRead();
-                    }
-                    manager.showPlainMessage(option_pane, "Your streak is " + user.getStreak());
-                    // update the streak 
-                    manager.getDBOperator().saveStreak();
-                    streak_msg_clicked = true;
                 }
             }
 
@@ -195,12 +199,14 @@ public class Menu extends javax.swing.JFrame {
     private void announcements_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_announcements_btnActionPerformed
 
         //manager.getDBOperator().setUser(user);
+        manager.getDBOperator().setUser(user);
+
         if(manager.getAnnouncementsWindow() == null)
         {
             manager.setAnnouncementsWindow(new AnnouncementsPage(manager, manager.getDBOperator(), new Validator()));
         }
+       
         manager.getAnnouncementsWindow().roleCheck();
-        System.out.println(user.isAdmin());
         manager.getAnnouncementsWindow().repaint();
         manager.getAnnouncementsWindow().setVisible(true);
         this.setVisible(false);

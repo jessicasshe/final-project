@@ -21,6 +21,11 @@ public class Login extends javax.swing.JFrame {
         this.db_operator = db_operator;
     }
 
+    public void clearFields()
+    {
+        email_text.setText("");
+        password_text.setText("");
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -193,9 +198,11 @@ public class Login extends javax.swing.JFrame {
                    }
                    
                    manager.getMenuWindow().setUser(user);
+                   System.out.println(user.getName());
                    manager.getMenuWindow().configureWelcomeMessage();
                    manager.getMenuWindow().repaint();
                    manager.getMenuWindow().setVisible(true);
+                   clearFields();
                    this.setVisible(false);
                }
                 else
@@ -214,6 +221,7 @@ public class Login extends javax.swing.JFrame {
             manager.setSignupWindow(SignupFrame);
 
         }
+        clearFields();
         manager.getSignupWindow().setVisible(true);
         this.setVisible(false); 
     }//GEN-LAST:event_signup_btnActionPerformed

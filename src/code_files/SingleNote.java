@@ -28,6 +28,8 @@ public class SingleNote extends javax.swing.JFrame {
             
     public void configureDetails()
     {
+        validator.setChangesSaved(false);
+        validator.setChangesMade(false);
         title.setText(note.getBook().getName());
         chapter_num.setText(String.valueOf(note.getChapterNum()));
         date_label.setText(note.getLastEditedDate());
@@ -55,6 +57,7 @@ public class SingleNote extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(158, 118, 118));
+        jPanel1.setPreferredSize(new java.awt.Dimension(800, 500));
         jPanel1.setSize(new java.awt.Dimension(800, 500));
 
         title.setFont(new java.awt.Font("Helvetica Neue", 1, 36)); // NOI18N
@@ -117,7 +120,7 @@ public class SingleNote extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(27, 27, 27)
                         .addComponent(title)))
-                .addContainerGap(235, Short.MAX_VALUE))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,12 +147,12 @@ public class SingleNote extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1143, Short.MAX_VALUE)
+            .addGap(0, 947, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(202, Short.MAX_VALUE)))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,6 +184,7 @@ public class SingleNote extends javax.swing.JFrame {
         else
         {
             manager.getReadingNoteWindow().setVisible(true);
+            manager.getReadingNoteWindow().configureListModel();
             this.setVisible(false);
         }
             
@@ -198,6 +202,7 @@ public class SingleNote extends javax.swing.JFrame {
             if(val == 1)
             {
                 manager.showPlainMessage(option_pane, "Successfully deleted note.");
+      
                 
             }
             else

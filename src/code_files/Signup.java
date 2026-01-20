@@ -17,6 +17,13 @@ public class Signup extends javax.swing.JFrame {
         this.validator = validator;
         this.db_operator = db_operator;
     }
+    
+    public void clearFields()
+    {
+        email_text.setText("");
+        password_text.setText("");
+        name_text.setText("");
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -177,10 +184,17 @@ public class Signup extends javax.swing.JFrame {
             }
             else
             {
-               int val = db_operator.CreateNewUser(user);
-               if(val == 1)
+               int user_id = db_operator.CreateNewUser(user);
+               db_operator.setUser(user);
+
+               if(user_id != -1)
                {
-                    manager.showPlainMessage(signup_option_pane, "User created successfully!");
+                    user.setUserId(user_id);
+                    int val = db_operator.createNewStreak();
+                    if(val == 1)
+                    {
+                        manager.showPlainMessage(signup_option_pane, "User created successfully!");
+                    }
                }
                else
                {
@@ -192,6 +206,7 @@ public class Signup extends javax.swing.JFrame {
 
     private void login_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login_btnActionPerformed
         // TODO add your handling code here:
+        clearFields();
         this.setVisible(false);
         manager.getLoginWindow().setVisible(true);
     }//GEN-LAST:event_login_btnActionPerformed

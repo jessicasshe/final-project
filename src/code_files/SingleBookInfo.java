@@ -542,15 +542,37 @@ public class SingleBookInfo extends javax.swing.JFrame {
             {
                 
                 // Prompt user to select a shelf type
-                String shelf_selected = single_book_option_pane.showInputDialog(null, "Choose a shelf:", "Input", JOptionPane.INFORMATION_MESSAGE, null, shelf_options, shelf_options[0]).toString();
-                added_book_id = db_operator.addBookToUserBooks(new_book, shelf_selected);
+                String shelf_selected = "";
+                
+                try{
+                    
+                    shelf_selected = single_book_option_pane.showInputDialog(null, "Choose a shelf:", "Input", JOptionPane.INFORMATION_MESSAGE, null, shelf_options, shelf_options[0]).toString();
+                    added_book_id = db_operator.addBookToUserBooks(new_book, shelf_selected);
+                    
+                }
+                catch(NullPointerException e)
+                {
+                    
+                } 
             }
         }
         else
         {
-             String shelf_selected = single_book_option_pane.showInputDialog(null, "Choose a shelf:", "Input", JOptionPane.INFORMATION_MESSAGE, null, shelf_options, shelf_options[0]).toString();
-             added_book_id = db_operator.addBookToUserBooks(book, shelf_selected);
+                String shelf_selected = "";               
+                try{
+                    
+                    shelf_selected = single_book_option_pane.showInputDialog(null, "Choose a shelf:", "Input", JOptionPane.INFORMATION_MESSAGE, null, shelf_options, shelf_options[0]).toString();
+                    added_book_id = db_operator.addBookToUserBooks(book, shelf_selected);
+                    
+                }
+                catch(NullPointerException e)
+                {
+                    
+                } 
         }
+
+         
+        System.out.println(added_book_id);
 
         switch(added_book_id)
         {
@@ -565,6 +587,7 @@ public class SingleBookInfo extends javax.swing.JFrame {
                 break;
             default:
                 manager.showErrorMessage(single_book_option_pane, "Could not add book to the collection");
+                
         }
     }//GEN-LAST:event_add_book_btnActionPerformed
 

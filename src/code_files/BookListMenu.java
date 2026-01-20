@@ -134,6 +134,7 @@ public class BookListMenu extends javax.swing.JFrame {
         {
            manager.setBookCollectionWindow(new BookCollection(manager, manager.getDBOperator()));
         }
+        manager.getBookCollectionWindow().configureListModels();
         manager.getBookCollectionWindow().setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_personal_btnActionPerformed

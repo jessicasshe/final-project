@@ -185,7 +185,7 @@ public class SearchBook extends javax.swing.JFrame {
     }//GEN-LAST:event_book_result_listMouseClicked
 
     private void reset_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reset_btnActionPerformed
-        search_results.clear();
+        search_list_model.clear();
     }//GEN-LAST:event_reset_btnActionPerformed
 
     private void search_type_chooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_type_chooserActionPerformed
