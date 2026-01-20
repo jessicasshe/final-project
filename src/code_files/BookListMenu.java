@@ -125,25 +125,20 @@ public class BookListMenu extends javax.swing.JFrame {
 
     private void back_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back_btnActionPerformed
         // TODO add your handling code here:
-        //EXIT
-        System.exit(0);
+        manager.getMenuWindow().setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_back_btnActionPerformed
 
     private void personal_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_personal_btnActionPerformed
-        // TODO add your handling code here:
-        manager.setBookCollectionWindow(new BookCollection(manager, manager.getDBOperator()));
+        if(manager.getBookCollectionWindow() == null)
+        {
+           manager.setBookCollectionWindow(new BookCollection(manager, manager.getDBOperator()));
+        }
+        manager.getBookCollectionWindow().setVisible(true);
         this.setVisible(false);
-        //POPUP AND PERSONAL LIST
-        //JOptionPane.showConfirmDialog(this, "Have you read your book today??", "Book Streak", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
     }//GEN-LAST:event_personal_btnActionPerformed
 
-  
 
-    static class setVisible {
-
-        public setVisible(boolean b) {
-        }
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton back_btn;

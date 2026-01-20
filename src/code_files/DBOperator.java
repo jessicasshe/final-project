@@ -69,6 +69,62 @@ public class DBOperator {
     {
       return manager.getConnector().connect();
     }
+    
+    public int saveLastDateRead()
+    {
+        try(Connection conn = newConnection(); 
+            PreparedStatement pstmt = conn.prepareStatement("UPDATE Users SET last_date_read = DATE('now', 'localtime')"))
+        {
+            int val = pstmt.executeUpdate();
+            return val;
+        }
+                   
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+    
+    public int saveStreak()
+    {
+        try(Connection conn = newConnection(); 
+            PreparedStatement pstmt = conn.prepareStatement("UPDATE Streak SET streak_value = ? WHERE user_id = ?"))
+        {
+            pstmt.setInt(1, user.getStreak()); // already incremented by 1
+            pstmt.setInt(1, user.getUserId());
+            int val = pstmt.executeUpdate();
+            return val;
+        }
+                   
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+    
+    
+    public int getStreak()
+    {
+        try(Connection conn = newConnection(); 
+            PreparedStatement pstmt = conn.prepareStatement("SELECT streak_value FROM Streak WHERE user_id = ?"))
+        {
+            try(ResultSet rs = pstmt.executeQuery())
+            {
+                if(rs.next())
+                {
+                    return rs.getInt("streak_value");
+                }
+            }
+                   
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return -1;
+    }
    
     public Announcement loadAnnouncement()
     {
@@ -94,6 +150,8 @@ public class DBOperator {
     {
         try(Connection conn = newConnection(); 
             // save a new announcement 
+                
+            // turn this into a join method
             PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Announcements (user_id, text, date) VALUES(?, ?, DATETIME('now', 'localtime'))"))
         {
             pstmt.setInt(1, user.getUserId());
@@ -152,15 +210,18 @@ public class DBOperator {
     public Note loadNote(Note note)
     {
          try(Connection conn = newConnection(); 
-            PreparedStatement pstmt = conn.prepareStatement("SELECT * from ReadingNotes (last_edited_date, text) WHERE book_id = ? AND user_id = ?"))
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM ReadingNotes WHERE book_id = ? AND user_id = ?"))
         {
             pstmt.setInt(1, note.getBook().getBookId());
             pstmt.setInt(2, note.getUser().getUserId());
             
             try(ResultSet rs = pstmt.executeQuery())
-            {
-                note.setLastEditedDate("last_edited_date");
-                note.setText("text");
+            {                
+                if(rs.next())
+                {
+                    note.setLastEditedDate(rs.getString("last_edited_date"));
+                    note.setText(rs.getString("text"));
+                }
                 return note;
             }
          
@@ -187,8 +248,8 @@ public class DBOperator {
         {
             pstmt.setInt(1, user.getUserId());
             pstmt.setInt(2, note.getBook().getBookId());
-            pstmt.setInt(4, note.getChapterNum());
-            pstmt.setString(5, note.getText());
+            pstmt.setInt(3, note.getChapterNum());
+            pstmt.setString(4, note.getText());
             
             int val = pstmt.executeUpdate();
             return val;
@@ -215,10 +276,10 @@ public class DBOperator {
         try(Connection conn = newConnection();
             PreparedStatement pstmt = conn.prepareStatement("UPDATE ReadingNotes SET last_edited_date = DATETIME('now', 'localtime'), text = ? WHERE user_id = ? AND  book_id = ? AND  chapter = ? "))
         {
-            pstmt.setString(2, note.getText());
-            pstmt.setInt(3, user.getUserId());
-            pstmt.setInt(4, note.getBook().getBookId());
-            pstmt.setInt(5, note.getChapterNum());
+            pstmt.setString(1, note.getText());
+            pstmt.setInt(2, user.getUserId());
+            pstmt.setInt(3, note.getBook().getBookId());
+            pstmt.setInt(4, note.getChapterNum());
                         
             int val = pstmt.executeUpdate();
             if(val == 1)
@@ -550,7 +611,6 @@ public class DBOperator {
                 if(rs.next())
                 {     // printing for debugging purposes 
 
-                    System.out.println("ResultSet Book Info: ");
                     System.out.println("Book ID: " + rs.getInt("book_id"));
                     System.out.println("Book name" + rs.getString("book_name"));
                     System.out.println("Book author" + rs.getString("author"));
@@ -674,7 +734,7 @@ public class DBOperator {
     
     public User LoadExistingUser(User user)
     {
-        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT * from Users where email = ? and password = ?"))
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("SELECT * from Users INNER JOIN Streak on Users.user_id = Streak.user_id WHERE email = ? and password = ?"))
         {
             pstmt.setString(1,user.getEmail());
             pstmt.setString(2,user.getPassword());
@@ -684,6 +744,10 @@ public class DBOperator {
                user.setUserId(rs.getInt("user_id"));
                user.setUserType(rs.getString("user_type"));
                user.setName(rs.getString("name"));
+               // to update the most recent login date 
+               user.setLastDateRead(rs.getString("last_date_read"));
+               System.out.println("Last date read was: " +user.getLastDateRead());
+               user.setStreak(rs.getInt("streak_value"));
                return user;
             }
         }
@@ -694,8 +758,8 @@ public class DBOperator {
         }
         return null;
     }
-
     
+
     /*
     Called from the Signup Window to create a new user row 
     @ param: User object w/ default values
@@ -704,11 +768,40 @@ public class DBOperator {
     */
     public int CreateNewUser(User user) 
     {
-        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("INSERT into Users (name, email, password) VALUES(?, ?, ?)")) {
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("INSERT into Users (name, email, password, user_type, last_logged_in) VALUES(?, ?, ?, ?, DATE('now', 'localtime'))")) {
             pstmt.setString(1, user.getName());
             pstmt.setString(2, user.getEmail());
             pstmt.setString(3, user.getPassword());
-            // update user type later
+            pstmt.setString(4, user.getUserType());
+            
+            int update = pstmt.executeUpdate();
+            if(update == 1)
+            {
+                if(createNewStreak() == 1)
+                {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Something went wrong");
+            e.printStackTrace();       
+        }
+        return -1;
+    }
+    
+    /* Called as a helper method when creating a new user
+    @ param : 
+    @ return : 1 for success, 0 for fail, -1 for exception
+    */
+    public int createNewStreak()
+    {
+        try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("INSERT into Streak (user_id, streak_value) VALUES(?, ?)")) {
+            pstmt.setInt(1, user.getUserId());
+            pstmt.setInt(2, 0);
+            
             int update = pstmt.executeUpdate();
             return update;
         }
@@ -724,7 +817,6 @@ public class DBOperator {
     
     public int createBook(Book book)
     {
-        // verify if the book alr exists-> UNIQUE in sqlite
         try(Connection conn = newConnection(); PreparedStatement pstmt = conn.prepareStatement("INSERT or IGNORE into Books (book_name, author, num_pages, image) VALUES(?, ?, ?, ?)")){
             pstmt.setBytes(4, book.getImage());
             pstmt.setString(1, book.getName());

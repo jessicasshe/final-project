@@ -2,26 +2,20 @@ package code_files;
 
 import code_files.AnnouncementsPage;
 import code_files.AnnouncementsPage;
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+import java.time.LocalDate;
+import javax.swing.JOptionPane;
 
 
-/**
- *
- * @author User
- */
+
 public class Menu extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Menu.class.getName());
 
-    /**
-     * Creates new form Menu
-     */
+
     public Menu(WindowManager manager, User user) {
         this.manager = manager;
         this.user = user;
+        streak_msg_clicked = false;
         initComponents();
         configureWelcomeMessage();
         setLocationRelativeTo(null); //centres it
@@ -38,6 +32,7 @@ public class Menu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        option_pane = new javax.swing.JOptionPane();
         jPanel1 = new javax.swing.JPanel();
         announcements_btn = new javax.swing.JButton();
         book_list_menu_btn = new javax.swing.JButton();
@@ -149,6 +144,7 @@ public class Menu extends javax.swing.JFrame {
         this.user = user;
     }
     
+    
     private void exit_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exit_btnActionPerformed
         // TODO add your handling code here:
         //return to login screen
@@ -163,7 +159,31 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_exit_btnActionPerformed
 
     private void book_list_menu_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_book_list_menu_btnActionPerformed
-        StreakTracker.promptIfNeeded(this);
+            LocalDate today = LocalDate.now(); // local time
+
+            if(streak_msg_clicked == false && !user.getLastDateRead().equals(today.toString()))
+            {
+                int input = JOptionPane.showConfirmDialog(null, "Have you read a chapter of a book today?", "Streak Tracker", JOptionPane.YES_NO_OPTION);
+                if(input == JOptionPane.YES_OPTION) 
+                {
+                    // check if the user didn't log their streak the day before & reset if so
+                    if(!user.getLastDateRead().equals((today.minusDays(1)).toString())) 
+                    {
+                        user.setStreak(0);
+                    }
+                    else 
+                    {
+                        user.setStreak(user.getStreak() +1);
+                        // call db method to update last date read to today
+                        manager.getDBOperator().saveLastDateRead();
+                    }
+                    manager.showPlainMessage(option_pane, "Your streak is " + user.getStreak());
+                    // update the streak 
+                    manager.getDBOperator().saveStreak();
+                    streak_msg_clicked = true;
+                }
+            }
+
         if(manager.getBookListMenuWindow() == null)
         {
             manager.setBookListMenuWindow(new BookListMenu(manager));
@@ -192,9 +212,11 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JButton book_list_menu_btn;
     private javax.swing.JButton exit_btn;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JOptionPane option_pane;
     private javax.swing.JLabel user_label;
     private javax.swing.JLabel welcome_label;
     // End of variables declaration//GEN-END:variables
     private WindowManager manager;
     private User user;
+    private boolean streak_msg_clicked;
 }

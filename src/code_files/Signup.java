@@ -170,7 +170,7 @@ public class Signup extends javax.swing.JFrame {
         }
         else
         {
-            User user = new User(0, "Member", email_text.getText().trim(), password_text.getText().trim(), name_text.getText().trim());
+            User user = new User(0, "Member", email_text.getText().trim(), password_text.getText().trim(), name_text.getText().trim(), null, 0);
             if(manager.getDBOperator().UserExists(user))
             {
                 manager.showErrorMessage(signup_option_pane, "A user with this email already exists.");

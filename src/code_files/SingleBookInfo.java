@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import java.lang.NumberFormatException;
 import java.lang.NullPointerException;
 import javax.swing.JLabel;
+import javax.swing.JFileChooser;
 
 
 public class SingleBookInfo extends javax.swing.JFrame {
@@ -315,8 +316,16 @@ public class SingleBookInfo extends javax.swing.JFrame {
     /*
     Hides the buttons if the user doesn't have it added in their collection
     */
+    
+    public Book setBook(Book book)
+    {
+        this.book = book;
+        return this.book;
+    }
     public void configurePersonalButtons()
     {
+        System.out.println(book.getName());
+        System.out.println(db_operator.ExistsInUsersBooks(book.getBookId()));
         if(!db_operator.ExistsInUsersBooks(book.getBookId()))
         {
             showUsersBooksButtons = false;
@@ -332,14 +341,21 @@ public class SingleBookInfo extends javax.swing.JFrame {
         {
             user_book = db_operator.getUsersBooksDetails(book.getBookId());
             showUsersBooksButtons = true;
+            update_page_pg_btn.setVisible(true);
+            progress_bar.setVisible(true);
+            collection_selector.setVisible(true);
+            remove_from_collection_btn.setVisible(true);
+            open_reading_notes_btn.setVisible(true);
+            shelf_name.setVisible(true);
+            jLabel5.setVisible(true);
         }
     }
     
    
     public void configureProgressBar(int page_progress)
     {
-        System.out.println("Setting page progress to " + page_progress + " out of " + book.getNumPages());
         progress_bar.setValue(page_progress);
+        validator.setChangesMade(true);
     }
     
    /*
@@ -347,12 +363,6 @@ public class SingleBookInfo extends javax.swing.JFrame {
     */
    public void configureBookDetails() 
     {
-        // checking for correct values 
-        System.out.println("Book id: " + book.getBookId());
-        //System.out.println("Page progress: " + book.get("page_progress"));
-        //System.out.println("Book name: " + details.getString("book_name"));
-        //System.out.println("Number of pages: " + details.getInt("num_pages"));
-        
         if(showUsersBooksButtons) 
         {
             collection_selector.setSelectedItem(user_book.getShelfType());
@@ -406,7 +416,7 @@ public class SingleBookInfo extends javax.swing.JFrame {
    */
     
         
-        /* 
+    /* 
     Called when the user presses the Save Details button. 
     The book may or may not be added to the Users book collection. 
     Calls helper functions updateBooksColumns() (db_operator) to update Books columns -> ignored if no unique value was violated 
@@ -430,21 +440,20 @@ public class SingleBookInfo extends javax.swing.JFrame {
                 {
                     manager.showPlainMessage(single_book_option_pane, "Changes saved successfully!");
                     validator.setChangesSaved(true);
+                    if(showUsersBooksButtons)
+                    {
+                        new_user_book = new UserBook(db_operator.getUser(), new_book.getBookId(), new_book.getName(), new_book.getAuthor(), new_book.getNumPages(), new_book.getTotalUsersRead(), new_book.getImage(), progress_bar.getValue(), collection_selector.getSelectedItem().toString());
+                        int users_books_rows_updated = manager.getDBOperator().updateUsersBooksColumns(new_user_book);
+                        if(users_books_rows_updated == 1)
+                        {
+                            manager.showPlainMessage(single_book_option_pane, "UsersBooks columns updated successfully!");
+                           // update_collection_lists(user_book.getShelfType(), new_user_book);
+                        }
+                    }
                 }
                 else if(book_rows_updated == 0)
                 {
-                    manager.showErrorMessage(single_book_option_pane, "Failed to save book information");
-                }
-
-                if(showUsersBooksButtons)
-                {
-                    new_user_book = new UserBook(db_operator.getUser(), new_book.getBookId(), new_book.getName(), new_book.getAuthor(), new_book.getNumPages(), new_book.getTotalUsersRead(), new_book.getImage(), progress_bar.getValue(), collection_selector.getSelectedItem().toString());
-                    int users_books_rows_updated = manager.getDBOperator().updateUsersBooksColumns(new_user_book);
-                    if(users_books_rows_updated == 1)
-                    {
-                        manager.showPlainMessage(single_book_option_pane, "UsersBooks columns updated successfully!");
-                       // update_collection_lists(user_book.getShelfType(), new_user_book);
-                    }
+                    manager.showErrorMessage(single_book_option_pane, "Could not save book information.");
                 }
             }    
     }
@@ -547,6 +556,9 @@ public class SingleBookInfo extends javax.swing.JFrame {
         {
             case 1:
                 manager.showPlainMessage(single_book_option_pane,"Successfully added to your book collection!");
+                configurePersonalButtons();
+                configureBookDetails();
+                this.repaint();
                 break;
             case 0:
                 manager.showErrorMessage(single_book_option_pane, "Match found, already exists in your collection!");
@@ -611,27 +623,31 @@ public class SingleBookInfo extends javax.swing.JFrame {
         {
             validator.setChangesSaved(false);
         }
-  
     }//GEN-LAST:event_edit_users_btnActionPerformed
 
             
     private void change_cover_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_change_cover_btnActionPerformed
         img_file_chooser.setVisible(true);
-
         int value = img_file_chooser.showOpenDialog(BookDetailsPanel);
-        if(value != 0)
+        if(value == JFileChooser.APPROVE_OPTION)
         {
             book_img_file = new File(img_file_chooser.getSelectedFile().getPath());
             book_img.setIcon(new ImageIcon(book_img_file.getPath()));
         }
-        
     }//GEN-LAST:event_change_cover_btnActionPerformed
 
     private void open_reading_notes_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_open_reading_notes_btnActionPerformed
         // open reading notes window & use overloaded method to give the specific book
+
         if(manager.getReadingNoteWindow() != null)
         {
+            System.out.println(book.getName());
+            manager.getReadingNoteWindow().setBook(book);
+            manager.getReadingNoteWindow().configureListModel();
+
+            manager.getReadingNoteWindow().configureName();
             manager.getReadingNoteWindow().setVisible(true);
+            
         }
         else
         {
@@ -713,7 +729,6 @@ public class SingleBookInfo extends javax.swing.JFrame {
     private UserBook new_user_book;
     private File book_img_file;
     private WindowManager manager;
-    private byte[] blob_file;
     private boolean showUsersBooksButtons;
     private DBOperator db_operator;
     private Validator validator;

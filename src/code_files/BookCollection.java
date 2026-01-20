@@ -191,12 +191,20 @@ public class BookCollection extends javax.swing.JFrame {
     }//GEN-LAST:event_finished_listMouseClicked
     
     private void search_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_btnActionPerformed
-        manager.setSearchBookWindow(new SearchBook(manager.getDBOperator(), manager));
+        if(manager.getSearchBookWindow() == null)
+        {
+            manager.setSearchBookWindow(new SearchBook(manager.getDBOperator(), manager));
+        }
+        manager.getSearchBookWindow().setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_search_btnActionPerformed
 
     private void create_book_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_create_book_btnActionPerformed
-        manager.setCreateBookWindow(new CreateBook(manager.getDBOperator(), manager, new Validator()));
+        if(manager.getCreateBookWindow() == null)
+        {
+            manager.setCreateBookWindow(new CreateBook(manager.getDBOperator(), manager, new Validator()));
+        }
+        manager.getCreateBookWindow().setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_create_book_btnActionPerformed
 
@@ -213,14 +221,17 @@ public class BookCollection extends javax.swing.JFrame {
     {  
         int book_id = db_operator.getBookId(list_name.getSelectedValue().toString());
         Book book = db_operator.getFullBookDetails(book_id);
-        manager.setSingleBookWindow(new SingleBookInfo(book, manager, new Validator(), db_operator));
-        this.dispose();
         
-        
-// saved before the resultset was closed
-      //  UserBook user_book = new UserBook(manager.getDBOperator().getUser(), book.getBookId(), )
-       // manager.setPreviousWindow("BookCollection");
-        //manager.setSingleBookWindow(new SingleBookInfo(book, manager));
+        if(manager.getSingleBookWindow() == null)
+        {
+            manager.setSingleBookWindow(new SingleBookInfo(book, manager, new Validator(), db_operator));
+        }
+        manager.getSingleBookWindow().setBook(book);
+        manager.getSingleBookWindow().configurePersonalButtons();
+        manager.getSingleBookWindow().configureBookDetails();
+        manager.getSingleBookWindow().repaint();
+        manager.getSingleBookWindow().setVisible(true);
+        this.setVisible(false);
     }
    
     // Variables declaration - do not modify//GEN-BEGIN:variables

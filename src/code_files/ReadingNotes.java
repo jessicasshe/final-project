@@ -24,7 +24,16 @@ public class ReadingNotes extends javax.swing.JFrame {
         this.setVisible(true);
     }
 
+    public Book setBook(Book book)
+    {
+        this.book = book;
+        return this.book;
+    }
     
+    public void configureName()
+    {
+        reading_notes_label.setText(book.getName());
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -173,7 +182,6 @@ public class ReadingNotes extends javax.swing.JFrame {
     {
         
         // get a collection of note objects for the users book
-
         for(Integer chapter : specific_chapters)
         {
             chapters.addElement(chapter.toString());
@@ -218,7 +226,7 @@ public class ReadingNotes extends javax.swing.JFrame {
             if(note_found == false)
             {
                 chapters.clear();
-                chapters.addElement("No notes found");
+                manager.showErrorMessage(chapter_input, "No notes found");
                 chapter_note_list.setModel((DefaultListModel<String>)chapters);
             }                
         }
@@ -237,7 +245,7 @@ public class ReadingNotes extends javax.swing.JFrame {
         String chapter_entered = manager.showInputMessage(chapter_input, "Enter the chapter number:");
         if(!validator.isEmpty(chapter_entered) && validator.isNumeric(chapter_entered))
         {            
-            Note note = new Note(manager.getDBOperator().getUser(), book, "YYYY/MM/DD", Integer.parseInt(chapter_entered), "");
+            Note note = new Note(manager.getDBOperator().getUser(), book, "", Integer.parseInt(chapter_entered), "");
             if (manager.getDBOperator().addNewNote(note) == 1)
             {
                 System.out.println("Note created successfully!");
@@ -267,7 +275,15 @@ public class ReadingNotes extends javax.swing.JFrame {
         {
             if(note.getChapterNum() == Integer.parseInt(chapter_note_list.getSelectedValue()))
             {
-                manager.setSingleNoteWindow(new SingleNote(manager, validator, note, manager.getDBOperator()));
+                if(manager.getSingleNoteWindow() == null)
+                {
+                    manager.setSingleNoteWindow(new SingleNote(manager, validator, note, manager.getDBOperator()));
+                }
+                manager.getSingleNoteWindow().setNote(note);
+
+                manager.getSingleNoteWindow().configureDetails();
+                manager.getSingleNoteWindow().setVisible(true);
+                this.setVisible(false);
            }
         }
     }//GEN-LAST:event_chapter_note_listMousePressed
@@ -303,7 +319,7 @@ public class ReadingNotes extends javax.swing.JFrame {
     }//GEN-LAST:event_reset_search_btnActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        manager.getReadingNoteWindow().setVisible(true);
+        manager.getSingleBookWindow().setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 

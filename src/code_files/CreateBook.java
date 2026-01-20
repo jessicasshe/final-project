@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JLabel;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -248,18 +249,15 @@ public class CreateBook extends javax.swing.JFrame {
        
         img_file_chooser.setVisible(true);
         
-        img_file_chooser.showOpenDialog(jPanel1);
+       int val = img_file_chooser.showOpenDialog(jPanel1);
         img_file_chooser.setApproveButtonText("Save");
 
-        if(img_file_chooser.getSelectedFile() != null)
+        if(val == JFileChooser.APPROVE_OPTION)
         {
            System.out.println(img_file_chooser.getSelectedFile().getPath());
            img_file = img_file_chooser.getSelectedFile();
-            book_img.setIcon(new ImageIcon(img_file.getPath()));
-        
-        
-        
-        book_img.setIcon(new ImageIcon(img_file.getPath()));
+           book_img.setIcon(new ImageIcon(img_file.getPath()));
+
         }
         // change image to the selected file
 

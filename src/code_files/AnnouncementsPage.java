@@ -35,12 +35,8 @@ public class AnnouncementsPage extends javax.swing.JFrame {
 
     }
     
-    private void saveText(){
-        // call db method to save announcement
-        
-    }
     
-    private void loadAnnouncement()
+    public void loadAnnouncement()
     {
         this.announcement = db_operator.loadAnnouncement();
         announcement_field.setText(announcement.getText());
@@ -192,12 +188,9 @@ public class AnnouncementsPage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void join_meeting_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_join_meeting_btnActionPerformed
-        // TODO add your handling code here:
-        //MEETING LINK
-        JEditorPane editorPane = new JEditorPane();
+
         editorPane.setContentType("text/html");
         editorPane.setEditable(false);
-        meeting_link = db_operator.getLink();
         editorPane.setText("<html>"+"<a href="+"'"+meeting_link+"'"+">Join Meeting</a>"+"</html>");
         
         editorPane.addHyperlinkListener(new HyperlinkListener(){
@@ -216,8 +209,7 @@ public class AnnouncementsPage extends javax.swing.JFrame {
     }//GEN-LAST:event_join_meeting_btnActionPerformed
 
     private void back_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back_btnActionPerformed
-        // TODO add your handling code here:
-        if(!announcement_field.getText().equals(announcement.getText()))
+        if(!announcement_field.getText().equals(announcement.getText())) // edits have been made
         {
             if(validator.changesSaved() == true) // valid, no unsaved changes
             {
@@ -269,7 +261,8 @@ public class AnnouncementsPage extends javax.swing.JFrame {
         else
         {
             manager.showErrorMessage(option_pane, "Something went wrong, could not update link.");
-        }
+        }        
+
    }
    else
    {
@@ -296,6 +289,8 @@ public class AnnouncementsPage extends javax.swing.JFrame {
     private WindowManager manager;
     private DBOperator db_operator;
     private Announcement announcement;
-    private String meeting_link;
     private Validator validator;
+    private String meeting_link = db_operator.getLink();
+    private JEditorPane editorPane = new JEditorPane();
+
 }

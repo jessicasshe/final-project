@@ -20,9 +20,14 @@ public class SingleNote extends javax.swing.JFrame {
         original_text = note.getText();
     }
 
+    public Note setNote(Note note)
+    {
+        this.note = note;
+        return this.note;
+    }
+            
     public void configureDetails()
     {
-        
         title.setText(note.getBook().getName());
         chapter_num.setText(String.valueOf(note.getChapterNum()));
         date_label.setText(note.getLastEditedDate());
@@ -169,14 +174,16 @@ public class SingleNote extends javax.swing.JFrame {
             }
             else{
             
-                manager.setReadingNoteWindow(new ReadingNotes(manager, validator, note.getBook()));
+                manager.getReadingNoteWindow().setVisible(true);
                 this.setVisible(false);
             }
         }
+        else
+        {
+            manager.getReadingNoteWindow().setVisible(true);
+            this.setVisible(false);
+        }
             
-        
-        manager.setReadingNoteWindow(new ReadingNotes(manager, validator, note.getBook()));
-        this.setVisible(false);
     }//GEN-LAST:event_back_btnActionPerformed
 
     private void delete_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delete_btnActionPerformed
@@ -219,12 +226,17 @@ public class SingleNote extends javax.swing.JFrame {
                 
                 // get most recent text field 
                 note.setText(text_area.getText());
-                if(manager.getDBOperator().saveNote(note) ==1)
+                if(manager.getDBOperator().saveNote(note) == 1)
                 {
                     manager.showPlainMessage(option_pane, "Saved changes successfully");
                     // change the last edited date 
-                    note = db_operator.loadNote(note); // dont need a copy of the original note like in other windows 
-                    date_label.setText(note.getText());
+                    note = db_operator.loadNote(note); 
+                    System.out.println("New note details");
+                    System.out.println("Date edited " + note.getLastEditedDate());
+                    System.out.println("New text " + note.getText());
+
+                    // dont need a copy of the original note like in other windows 
+                    date_label.setText(note.getLastEditedDate());
                
                     // update the note list model
                     manager.getReadingNoteWindow().configureListModel();
@@ -237,7 +249,6 @@ public class SingleNote extends javax.swing.JFrame {
             System.out.println("No changes to save");
         }
         
-        // consider adding a plain message here
     }//GEN-LAST:event_save_btnActionPerformed
 
 

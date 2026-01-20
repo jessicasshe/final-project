@@ -238,5 +238,4 @@ public class SearchBook extends javax.swing.JFrame {
     private WindowManager manager;
     private ArrayList search_results;
     private DefaultListModel<String> search_list_model;
-    private String prev_shelf_type;
 }

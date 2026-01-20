@@ -7,15 +7,54 @@ public class User {
     private String email;
     private String password;
     private String name;
+    private String last_date_read;
+    private int streak; // for setting the menu streak;
     
-    public User(int id, String type, String email, String pass, String name)
+    
+    public User(int id, String type, String email, String pass, String name, String last_date_read, int streak)
     {
         user_id = id;
         user_type = type;
         this.email = email;
         this.name = name;
         password = pass;
+        this.last_date_read = last_date_read;
+        this.streak = streak;
     }
+    
+    public int getStreak()
+    {
+        return streak;
+    }
+    
+    public int setStreak(int streak)
+    {
+        this.streak = streak;
+        return this.streak;
+    }
+    
+    public String getLastDateRead()
+    {
+        return last_date_read;
+    }
+    
+    public String setLastDateRead(String date)
+    {
+        last_date_read = date;
+        return last_date_read;
+    }
+    
+    public int getUserStreak()
+    {
+        return this.streak;
+    }
+    
+    public int setUserStreak(int streak)
+    {
+        this.streak = streak;
+        return this.streak;
+    }
+                
     
     public String getEmail()
     {
