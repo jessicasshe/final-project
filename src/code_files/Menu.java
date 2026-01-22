@@ -172,10 +172,12 @@ public class Menu extends javax.swing.JFrame {
                         if(!user.getLastDateRead().equals((today.minusDays(1)).toString())) 
                         {
                             user.setStreak(0);
+                            manager.getDBOperator().saveLastDateRead(); // still make sure to update the new time 
+
                         }
                         else 
                         {
-                            user.setStreak(user.getStreak() +1);
+                            user.setStreak(user.getStreak()+1);
                             // call db method to update last date read to today
                             manager.getDBOperator().saveLastDateRead();
                         }

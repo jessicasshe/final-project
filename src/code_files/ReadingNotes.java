@@ -319,7 +319,9 @@ public class ReadingNotes extends javax.swing.JFrame {
                 Collections.sort(chapter_numbers, Collections.reverseOrder());
                 break;
         }
+        
         chapter_note_list.setModel(configureListModel(chapter_numbers));
+        
     }//GEN-LAST:event_sort_combo_boxActionPerformed
 
     private void reset_search_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reset_search_btnActionPerformed

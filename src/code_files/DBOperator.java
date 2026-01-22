@@ -74,8 +74,10 @@ public class DBOperator {
     public int saveLastDateRead()
     {
         try(Connection conn = newConnection(); 
-            PreparedStatement pstmt = conn.prepareStatement("UPDATE Users SET last_date_read = DATE('now', 'localtime')"))
+            PreparedStatement pstmt = conn.prepareStatement("UPDATE Users SET last_date_read = DATE('now', 'localtime') WHERE user_id = ?"))
         {
+            System.out.println(user.getUserId());
+            pstmt.setInt(1, user.getUserId());
             int val = pstmt.executeUpdate();
             return val;
         }
